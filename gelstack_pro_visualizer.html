@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="system">
+<html lang="en" data-theme="system" class="w-full max-w-full overflow-x-hidden">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -206,85 +206,87 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col pb-12">
+<body class="min-h-screen flex flex-col pb-12 w-full max-w-full overflow-x-hidden">
 
-  <!-- Header Navigation Bar -->
-  <header class="sticky top-0 z-40 glass-nav border-b border-black/10 dark:border-white/10 px-4 py-3">
-    <div class="max-w-4xl mx-auto flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <!-- App Logo Icon with Synced Gradient -->
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-md shadow-pink-950/20">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <!-- Header Navigation Bar (Mobile Responsive & Tight) -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-black/10 dark:border-white/10 px-3 sm:px-4 py-2.5">
+    <div class="max-w-4xl mx-auto flex items-center justify-between gap-1.5 sm:gap-3 w-full overflow-hidden">
+      
+      <!-- Brand Title & Icon -->
+      <div class="flex items-center space-x-2 shrink-0">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-md shadow-pink-950/20 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
           </svg>
         </div>
-        <div>
-          <h1 class="text-base font-bold tracking-tight flex items-center space-x-2" style="color: var(--text-main)">
-            <span>GelStack Pro</span>
-            <span class="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-blue-600/20 text-blue-500 dark:text-blue-400 border border-blue-500/30">12-PACK EDITION</span>
-          </h1>
-          <p class="text-[11px]" style="color: var(--text-sub)">Subtractive Lighting & Harmony Matcher</p>
+        <div class="leading-tight">
+          <div class="flex items-center space-x-1.5">
+            <h1 class="text-xs sm:text-base font-bold tracking-tight whitespace-nowrap" style="color: var(--text-main)">GelStack Pro</h1>
+            <span class="hidden sm:inline-block text-[9px] uppercase font-semibold px-1.5 py-0.5 rounded bg-blue-600/20 text-blue-500 dark:text-blue-400 border border-blue-500/30">12-PACK</span>
+          </div>
+          <p class="hidden sm:block text-[10px] opacity-75 whitespace-nowrap" style="color: var(--text-sub)">Subtractive Engine & Harmony Matcher</p>
         </div>
       </div>
 
       <!-- Theme Switcher & Actions -->
-      <div class="flex items-center space-x-2">
-        <!-- Legible Theme Selector Dropdown -->
-        <select id="themeSelector" onchange="setTheme(this.value)" class="theme-select px-2.5 py-1.5 rounded-lg text-xs font-semibold focus:outline-none cursor-pointer">
-          <option value="system">💻 System Theme</option>
-          <option value="dark">🌙 Dark Mode</option>
-          <option value="light">☀️ Light Mode</option>
+      <div class="flex items-center space-x-1.5 shrink-0">
+        <!-- Compact Theme Selector Dropdown -->
+        <select id="themeSelector" onchange="setTheme(this.value)" class="theme-select px-2 py-1 rounded-lg text-[11px] font-semibold focus:outline-none cursor-pointer max-w-[105px] sm:max-w-none truncate">
+          <option value="system">💻 System</option>
+          <option value="dark">🌙 Dark</option>
+          <option value="light">☀️ Light</option>
         </select>
 
-        <button onclick="togglePwaModal()" class="touch-bounce px-2.5 py-1.5 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs flex items-center space-x-1" style="color: var(--text-main)">
+        <button onclick="togglePwaModal()" class="touch-bounce p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[11px] flex items-center space-x-1" style="color: var(--text-main)">
           <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
           </svg>
-          <span class="hidden sm:inline font-medium">Save App</span>
+          <span class="hidden md:inline font-medium">Save</span>
         </button>
         
-        <!-- High Contrast Reset Button -->
-        <button onclick="clearAllGels()" class="touch-bounce px-3 py-1.5 rounded-lg btn-reset-contrast text-xs font-bold shadow-sm">
-          Reset Stack
+        <!-- High Contrast Compact Reset Button -->
+        <button onclick="clearAllGels()" class="touch-bounce px-2.5 py-1 rounded-lg btn-reset-contrast text-[11px] font-bold shadow-sm whitespace-nowrap">
+          Reset
         </button>
       </div>
+
     </div>
   </header>
 
   <!-- Main Responsive Grid -->
-  <main class="flex-1 max-w-4xl mx-auto w-full px-4 pt-4 space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-6">
+  <main class="flex-1 max-w-4xl mx-auto w-full px-3 sm:px-4 pt-3 sm:pt-4 space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-6">
 
     <!-- LEFT COLUMN: SPOTLIGHT PREVIEW & SPECTRAL METERS -->
     <div class="md:col-span-5 space-y-4">
       
       <!-- Spotlight Stage Card -->
-      <section class="glass-card rounded-2xl p-4 shadow-2xl relative overflow-hidden">
+      <section class="glass-card rounded-2xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden">
         
         <!-- Header Fixture Info -->
         <div class="flex items-center justify-between mb-3 text-xs" style="color: var(--text-sub)">
-          <div class="flex items-center space-x-1.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="lampSourceLabel" class="font-medium" style="color: var(--text-main)">5600K Daylight LED</span>
+          <div class="flex items-center space-x-1.5 truncate pr-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+            <span id="lampSourceLabel" class="font-medium truncate" style="color: var(--text-main)">5600K Daylight LED</span>
           </div>
-          <button onclick="switchTab('settings')" class="text-blue-500 hover:underline flex items-center space-x-1 text-[11px] font-semibold">
-            <span>Change Stage</span>
+          <button onclick="switchTab('settings')" class="text-blue-500 hover:underline flex items-center space-x-1 text-[11px] font-semibold shrink-0">
+            <span>Stage</span>
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
 
         <!-- Spotlight Viewport -->
-        <div id="spotlightContainer" class="relative w-full h-56 rounded-xl overflow-hidden border border-black/10 dark:border-white/10 flex items-center justify-center transition-all duration-300">
+        <div id="spotlightContainer" class="relative w-full h-52 sm:h-56 rounded-xl overflow-hidden border border-black/10 dark:border-white/10 flex items-center justify-center transition-all duration-300">
           <div id="surfaceTexture" class="absolute inset-0 bg-texture-stage transition-colors duration-300"></div>
 
           <!-- Diffuse Glow Overlay -->
           <div id="diffusionOverlay" class="absolute inset-0 bg-white/20 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-none"></div>
 
           <!-- Spotlight Radial Glow -->
-          <div id="spotlightGlow" class="absolute w-48 h-48 rounded-full filter blur-xl transition-all duration-300 opacity-90" style="background-color: #ffffff;"></div>
+          <div id="spotlightGlow" class="absolute w-44 h-44 sm:w-48 sm:h-48 rounded-full filter blur-xl transition-all duration-300 opacity-90" style="background-color: #ffffff;"></div>
 
           <!-- Spotlight Core & Dynamic Synchronized Callout Badge -->
-          <div id="spotlightCore" class="relative z-10 w-36 h-36 rounded-full border-2 border-white/20 shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-center p-2" style="background-color: #ffffff;">
-            <span id="spotlightToneBadge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-black/85 text-white backdrop-blur-md shadow-md border border-white/20 max-w-[130px] sm:max-w-[150px] leading-tight text-center break-words">
+          <div id="spotlightCore" class="relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full border-2 border-white/20 shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-center p-2" style="background-color: #ffffff;">
+            <span id="spotlightToneBadge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-black/85 text-white backdrop-blur-md shadow-md border border-white/20 max-w-[125px] sm:max-w-[150px] leading-tight text-center break-words">
               White Light
             </span>
           </div>
@@ -302,12 +304,12 @@
         </div>
 
         <!-- Color Readouts & Spectral Meters -->
-        <div class="mt-3.5 pt-3 border-t border-black/10 dark:border-white/10 space-y-2">
+        <div class="mt-3 pt-3 border-t border-black/10 dark:border-white/10 space-y-2">
           <div class="flex items-center justify-between text-xs font-mono">
-            <span class="opacity-80">RGB: <strong id="rgbText" class="text-orange-500 font-bold">255, 255, 255</strong></span>
-            <span class="opacity-80">HEX: <strong id="hexText" class="text-blue-500 font-bold">#FFFFFF</strong></span>
+            <span class="opacity-80 text-[11px] sm:text-xs">RGB: <strong id="rgbText" class="text-orange-500 font-bold">255, 255, 255</strong></span>
+            <span class="opacity-80 text-[11px] sm:text-xs">HEX: <strong id="hexText" class="text-blue-500 font-bold">#FFFFFF</strong></span>
             <button onclick="copyRecipeToClipboard()" class="touch-bounce px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[10px] active:bg-blue-600 active:text-white font-semibold">
-              Copy Recipe
+              Copy
             </button>
           </div>
 
@@ -906,7 +908,6 @@
         selectedOutfitHue = Math.round(angle);
         updateOutfitSwatchDisplay();
         drawColorWheel();
-        // On-demand behavior: do NOT trigger live recommendation updates during drag
       };
 
       canvas.addEventListener('mousedown', (e) => { isDragging = true; handleInput(e); });
@@ -914,22 +915,21 @@
       window.addEventListener('mouseup', () => { isDragging = false; });
 
       canvas.addEventListener('touchstart', (e) => { isDragging = true; handleInput(e); });
-    window.addEventListener('touchmove', (e) => { if (isDragging) handleInput(e); });
-    window.addEventListener('touchend', () => { isDragging = false; });
-    
-    updateOutfitSwatchDisplay();
-  }
+      window.addEventListener('touchmove', (e) => { if (isDragging) handleInput(e); });
+      window.addEventListener('touchend', () => { isDragging = false; });
+      
+      updateOutfitSwatchDisplay();
+    }
 
-  function onSatLightChange() {
-    selectedOutfitSat = parseInt(document.getElementById('satSlider').value);
-    selectedOutfitLight = parseInt(document.getElementById('lightSlider').value);
-    document.getElementById('satValueText').innerText = `${selectedOutfitSat}%`;
-    document.getElementById('lightValueText').innerText = `${selectedOutfitLight}%`;
-    updateOutfitSwatchDisplay();
-    // On-demand behavior: recommendations only refresh when Discover button is clicked
-  }
+    function onSatLightChange() {
+      selectedOutfitSat = parseInt(document.getElementById('satSlider').value);
+      selectedOutfitLight = parseInt(document.getElementById('lightSlider').value);
+      document.getElementById('satValueText').innerText = `${selectedOutfitSat}%`;
+      document.getElementById('lightValueText').innerText = `${selectedOutfitLight}%`;
+      updateOutfitSwatchDisplay();
+    }
 
-  function drawColorWheel() {
+    function drawColorWheel() {
       const canvas = document.getElementById('colorWheelCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -960,7 +960,7 @@
       ctx.fillStyle = innerGrad;
       ctx.fill();
 
-      // Refined handle indicator (Slimmer border, subtle inner ring)
+      // Handle indicator
       const handleRad = selectedOutfitHue * Math.PI / 180;
       const handleDist = radius * 0.72;
       const hx = cx + handleDist * Math.cos(handleRad);
@@ -1013,7 +1013,6 @@
         }
       });
 
-      // If user has already clicked Discover, instantly display pre-calculated list for the newly selected pill
       if (cachedHarmonyResults) {
         renderHarmonyResults(mode);
       }
@@ -1023,19 +1022,15 @@
       const btn = document.getElementById('btnDiscoverHarmonies');
       if (btn) {
         btn.classList.remove('active-shine');
-        void btn.offsetWidth; // Trigger reflow for animation restart
+        void btn.offsetWidth;
         btn.classList.add('active-shine');
         setTimeout(() => btn.classList.remove('active-shine'), 900);
       }
       triggerHaptic();
 
-      // Batch calculate and store recommendations for ALL 3 harmony rules simultaneously
       batchCalculateAllHarmonies();
-
-      // Render for currently active pill
       renderHarmonyResults(harmonyMode);
 
-      // Reveal recommendations container
       const section = document.getElementById('harmonySuggestionsSection');
       if (section) {
         section.classList.remove('hidden');
@@ -1067,7 +1062,6 @@
         targetHues.push((outfitHue + 240) % 360);
       }
 
-      // Rank all 28 Presets by closest Hue distance to target harmony angles
       const rankedPresets = PRESETS.map(preset => {
         let minDist = 360;
         targetHues.forEach(th => {
@@ -1140,7 +1134,6 @@
        PRECISION HSL PANTONE & DESCRIPTIVE COLOR NAMING ENGINE
        ========================================================================== */
     function getDescriptiveColorName(hue, sat, light) {
-      // Very high lightness (Off-Whites & Pastels)
       if (light >= 85) {
         if (sat < 15) return "Ivory / Off-White";
         if (sat < 40) return "Pale Linen";
@@ -1149,7 +1142,6 @@
         return "Soft Pastel Glow";
       }
 
-      // Very low lightness (Darks, Blacks & Deep Earths)
       if (light <= 25) {
         if (sat < 15) return "Charcoal / Onyx";
         if (hue >= 10 && hue < 40) return "Deep Mahogany / Walnut";
@@ -1160,7 +1152,6 @@
         return "Deep Burgundy / Wine";
       }
 
-      // Low Saturation (Neutrals, Muted Tones, Beiges, Taus, Grays)
       if (sat < 25) {
         if (light >= 65) {
           if (hue >= 10 && hue < 50) return "Sand Beige";
@@ -1183,7 +1174,6 @@
         return "Dark Charcoal";
       }
 
-      // Medium Saturation (Rich Muted Colors & Terracotta/Camels)
       if (sat < 60) {
         if (hue >= 10 && hue < 30) {
           return light < 50 ? "Terracotta / Burnt Sienna" : "Warm Coral Dust";
@@ -1199,7 +1189,6 @@
         return "Muted Crimson";
       }
 
-      // High Saturation Colors
       if (hue >= 345 || hue < 15) return "Crimson Red";
       if (hue >= 15 && hue < 45) return "Warm Orange / Coral";
       if (hue >= 45 && hue < 70) return "Golden Yellow";
@@ -1651,7 +1640,6 @@
       } else if (mode === 'light') {
         useDark = false;
       } else {
-        // Evaluate system OS theme preference dynamically
         useDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       }
 
@@ -1673,13 +1661,11 @@
       renderSurfaceOptions();
       updateAppUI();
 
-      // Set initial theme based on selector default
       const themeSelector = document.getElementById('themeSelector');
       if (themeSelector) {
         setTheme(themeSelector.value);
       }
 
-      // Listen for OS system theme changes dynamically
       if (window.matchMedia) {
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
           const currentTheme = document.getElementById('themeSelector')?.value;
