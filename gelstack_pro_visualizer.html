@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0b0c10">
-  <title>GelStack Pro - Subtractive Lighting Filter Engine</title>
+  <title>GelStack Pro - Subtractive Lighting & Harmony Matcher</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -16,14 +16,11 @@
       theme: {
         extend: {
           colors: {
-            iosBg: '#0b0c10',
-            iosCard: '#161822',
-            iosSubCard: '#202330',
-            iosBorder: '#2c3042',
-            iosBlue: '#0a84ff',
-            iosGreen: '#30d158',
-            iosOrange: '#ff9f0a',
-            iosPurple: '#bf5af2'
+            iosBlue: '#2563eb',
+            iosPurple: '#7c3aed',
+            iosPink: '#db2777',
+            iosOrange: '#f97316',
+            iosGreen: '#10b981'
           },
           fontFamily: {
             sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Segoe UI', 'Roboto', 'sans-serif'],
@@ -34,44 +31,164 @@
   </script>
 
   <style>
-    /* Custom iOS PWA Aesthetics & Textures */
+    /* Dynamic Design System Variables for Dark & Light Themes */
+    :root, html.dark {
+      --bg-main: #0b0c10;
+      --bg-card: rgba(22, 24, 34, 0.88);
+      --bg-subcard: #1b1e2c;
+      --border-color: rgba(255, 255, 255, 0.12);
+      --text-main: #f3f4f6;
+      --text-sub: #9ca3af;
+      --tabstrip-bg: rgba(15, 17, 26, 0.88);
+      --input-bg: rgba(255, 255, 255, 0.08);
+      --select-opt-bg: #111827;
+      --select-opt-fg: #f3f4f6;
+      --btn-reset-bg: rgba(127, 29, 29, 0.4);
+      --btn-reset-fg: #fca5a5;
+      --btn-reset-border: rgba(220, 38, 38, 0.4);
+      --badge-bg: #f97316;
+      --badge-fg: #ffffff;
+    }
+
+    html.light, html:not(.dark) {
+      --bg-main: #f4f5f8;
+      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-subcard: #eef0f5;
+      --border-color: rgba(0, 0, 0, 0.12);
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --tabstrip-bg: rgba(255, 255, 255, 0.92);
+      --input-bg: rgba(0, 0, 0, 0.06);
+      --select-opt-bg: #ffffff;
+      --select-opt-fg: #111827;
+      --btn-reset-bg: rgba(254, 226, 226, 0.95);
+      --btn-reset-fg: #dc2626;
+      --btn-reset-border: rgba(239, 68, 68, 0.5);
+      --badge-bg: #ea580c;
+      --badge-fg: #ffffff;
+    }
+
     body {
-      background-color: #0b0c10;
-      color: #f3f4f6;
+      background-color: var(--bg-main);
+      color: var(--text-main);
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
       font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
+    /* Glassmorphism & Shimmer FX */
     .glass-nav {
-      background: rgba(15, 17, 26, 0.94);
+      background: var(--tabstrip-bg);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
     }
     
     .glass-card {
-      background: rgba(22, 24, 34, 0.88);
+      background: var(--bg-card);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Dynamic Contrast Reset Button */
+    .btn-reset-contrast {
+      background: var(--btn-reset-bg);
+      color: var(--btn-reset-fg);
+      border: 1px solid var(--btn-reset-border);
+    }
+
+    /* High-contrast Theme Select styling */
+    .theme-select {
+      background-color: var(--input-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .theme-select option {
+      background-color: var(--select-opt-bg);
+      color: var(--select-opt-fg);
+    }
+
+    /* Strict Active Tab Styling - Pure White Text */
+    .tab-btn-active {
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #db2777) !important;
+      color: #ffffff !important;
+      font-weight: 700 !important;
+      opacity: 1 !important;
+      box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+    }
+    .tab-btn-inactive {
+      background: transparent;
+      color: var(--text-main);
+      opacity: 0.75;
+    }
+    .tab-btn-inactive:hover {
+      opacity: 1;
+    }
+
+    .shimmer-tabstrip {
+      position: relative;
+      overflow: hidden;
+    }
+    .shimmer-tabstrip::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      animation: shimmer 8s infinite ease-in-out;
+      pointer-events: none;
+    }
+    @keyframes shimmer {
+      0% { left: -100%; }
+      20% { left: 200%; }
+      100% { left: 200%; }
+    }
+
+    /* Hero Discover Button Shimmer & Shine Sweep Animation */
+    .btn-discover-shimmer {
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-discover-shimmer::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -150%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.45) 50%,
+        transparent 70%
+      );
+      transform: rotate(25deg);
+      pointer-events: none;
+    }
+    .btn-discover-shimmer.active-shine::after {
+      animation: discoverShine 0.85s ease-out forwards;
+    }
+    @keyframes discoverShine {
+      0% { left: -150%; }
+      100% { left: 150%; }
     }
 
     .touch-bounce {
       transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s ease;
     }
     .touch-bounce:active {
-      transform: scale(0.95);
-      opacity: 0.85;
+      transform: scale(0.96);
+      opacity: 0.88;
     }
 
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-    /* Surface Textures for Beam Rendering */
+    /* Surface Textures */
     .bg-texture-stage {
       background: #090a10;
-      background-image: radial-gradient(circle at 50% 50%, rgba(28, 32, 48, 0.95) 0%, rgba(5, 5, 8, 1) 100%);
+      background-image: radial-gradient(circle at 50% 50%, rgba(35, 40, 60, 0.95) 0%, rgba(5, 5, 8, 1) 100%);
     }
     .bg-texture-wall {
       background: #9ca3af;
@@ -80,8 +197,7 @@
     }
     .bg-texture-wood {
       background: #4a2810;
-      background-image: radial-gradient(rgba(0,0,0,0.4) 1px, transparent 0), linear-gradient(to right, rgba(0,0,0,0.2), rgba(0,0,0,0.5));
-      background-size: 10px 10px, 100% 100%;
+      background-image: repeating-linear-gradient(90deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 2px, transparent 2px, transparent 12px), radial-gradient(circle at 50% 50%, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%);
     }
     .bg-texture-concrete {
       background: #374151;
@@ -90,42 +206,52 @@
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col pb-12 select-none">
+<body class="min-h-screen flex flex-col pb-12">
 
-  <!-- Navigation Bar -->
-  <header class="sticky top-0 z-40 glass-nav border-b border-iosBorder/50 px-4 py-3">
+  <!-- Header Navigation Bar -->
+  <header class="sticky top-0 z-40 glass-nav border-b border-black/10 dark:border-white/10 px-4 py-3">
     <div class="max-w-4xl mx-auto flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-600 to-purple-600 flex items-center justify-center shadow-lg shadow-orange-950/50">
+        <!-- App Logo Icon with Synced Gradient -->
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-md shadow-pink-950/20">
           <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
           </svg>
         </div>
         <div>
-          <h1 class="text-base font-bold tracking-tight text-white flex items-center space-x-2">
+          <h1 class="text-base font-bold tracking-tight flex items-center space-x-2" style="color: var(--text-main)">
             <span>GelStack Pro</span>
-            <span class="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-iosBlue/20 text-iosBlue border border-iosBlue/30">12-Pack Edition</span>
+            <span class="text-[10px] uppercase font-semibold px-1.5 py-0.5 rounded bg-blue-600/20 text-blue-500 dark:text-blue-400 border border-blue-500/30">12-PACK EDITION</span>
           </h1>
-          <p class="text-[11px] text-gray-400">Subtractive Lighting Filter Engine</p>
+          <p class="text-[11px]" style="color: var(--text-sub)">Subtractive Lighting & Harmony Matcher</p>
         </div>
       </div>
 
-      <!-- Quick Actions -->
+      <!-- Theme Switcher & Actions -->
       <div class="flex items-center space-x-2">
-        <button onclick="togglePwaModal()" class="touch-bounce px-2.5 py-1.5 rounded-lg bg-iosSubCard border border-iosBorder text-xs text-gray-300 flex items-center space-x-1">
-          <svg class="w-4 h-4 text-iosBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Legible Theme Selector Dropdown -->
+        <select id="themeSelector" onchange="setTheme(this.value)" class="theme-select px-2.5 py-1.5 rounded-lg text-xs font-semibold focus:outline-none cursor-pointer">
+          <option value="system">💻 System Theme</option>
+          <option value="dark">🌙 Dark Mode</option>
+          <option value="light">☀️ Light Mode</option>
+        </select>
+
+        <button onclick="togglePwaModal()" class="touch-bounce px-2.5 py-1.5 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-xs flex items-center space-x-1" style="color: var(--text-main)">
+          <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
           </svg>
           <span class="hidden sm:inline font-medium">Save App</span>
         </button>
-        <button onclick="clearAllGels()" class="touch-bounce px-3 py-1.5 rounded-lg bg-red-950/40 border border-red-800/40 text-xs font-medium text-red-300">
+        
+        <!-- High Contrast Reset Button -->
+        <button onclick="clearAllGels()" class="touch-bounce px-3 py-1.5 rounded-lg btn-reset-contrast text-xs font-bold shadow-sm">
           Reset Stack
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Main Grid Layout -->
+  <!-- Main Responsive Grid -->
   <main class="flex-1 max-w-4xl mx-auto w-full px-4 pt-4 space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-6">
 
     <!-- LEFT COLUMN: SPOTLIGHT PREVIEW & SPECTRAL METERS -->
@@ -135,20 +261,20 @@
       <section class="glass-card rounded-2xl p-4 shadow-2xl relative overflow-hidden">
         
         <!-- Header Fixture Info -->
-        <div class="flex items-center justify-between mb-3 text-xs text-gray-400">
+        <div class="flex items-center justify-between mb-3 text-xs" style="color: var(--text-sub)">
           <div class="flex items-center space-x-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="lampSourceLabel" class="font-medium text-gray-200">5600K Daylight LED</span>
+            <span id="lampSourceLabel" class="font-medium" style="color: var(--text-main)">5600K Daylight LED</span>
           </div>
-          <button onclick="switchTab('settings')" class="text-iosBlue hover:underline flex items-center space-x-1 text-[11px]">
+          <button onclick="switchTab('settings')" class="text-blue-500 hover:underline flex items-center space-x-1 text-[11px] font-semibold">
             <span>Change Stage</span>
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
 
         <!-- Spotlight Viewport -->
-        <div id="spotlightContainer" class="relative w-full h-56 rounded-xl overflow-hidden border border-iosBorder flex items-center justify-center transition-all duration-300">
-          <div id="surfaceTexture" class="absolute inset-0 bg-texture-stage transition-all duration-300"></div>
+        <div id="spotlightContainer" class="relative w-full h-56 rounded-xl overflow-hidden border border-black/10 dark:border-white/10 flex items-center justify-center transition-all duration-300">
+          <div id="surfaceTexture" class="absolute inset-0 bg-texture-stage transition-colors duration-300"></div>
 
           <!-- Diffuse Glow Overlay -->
           <div id="diffusionOverlay" class="absolute inset-0 bg-white/20 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-none"></div>
@@ -164,49 +290,49 @@
           </div>
 
           <!-- Layer Count Badge -->
-          <div class="absolute bottom-2 left-2 z-20 flex items-center space-x-1 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[10px] text-gray-300 border border-white/10">
-            <svg class="w-3.5 h-3.5 text-iosOrange" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+          <div class="absolute bottom-2 left-2 z-20 flex items-center space-x-1 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md text-[10px] text-gray-200 border border-white/10">
+            <svg class="w-3.5 h-3.5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             <span id="stackCountBadge">0 Gels Stacked</span>
           </div>
 
           <!-- Light Yield Readout -->
-          <div class="absolute bottom-2 right-2 z-20 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[10px] font-mono text-emerald-400 border border-white/10">
+          <div class="absolute bottom-2 right-2 z-20 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md text-[10px] font-mono text-emerald-400 border border-white/10">
             Yield: <span id="yieldValue">100%</span>
           </div>
         </div>
 
         <!-- Color Readouts & Spectral Meters -->
-        <div class="mt-3.5 pt-3 border-t border-iosBorder/60 space-y-2">
+        <div class="mt-3.5 pt-3 border-t border-black/10 dark:border-white/10 space-y-2">
           <div class="flex items-center justify-between text-xs font-mono">
-            <span class="text-gray-400">RGB: <strong id="rgbText" class="text-white">255, 255, 255</strong></span>
-            <span class="text-gray-400">HEX: <strong id="hexText" class="text-iosBlue">#FFFFFF</strong></span>
-            <button onclick="copyRecipeToClipboard()" class="touch-bounce px-2 py-0.5 rounded bg-iosSubCard border border-iosBorder text-[10px] text-gray-300 active:bg-iosBlue active:text-white">
+            <span class="opacity-80">RGB: <strong id="rgbText" class="text-orange-500 font-bold">255, 255, 255</strong></span>
+            <span class="opacity-80">HEX: <strong id="hexText" class="text-blue-500 font-bold">#FFFFFF</strong></span>
+            <button onclick="copyRecipeToClipboard()" class="touch-bounce px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[10px] active:bg-blue-600 active:text-white font-semibold">
               Copy Recipe
             </button>
           </div>
 
           <!-- Spectral Wavelength Pass Bars -->
           <div class="space-y-1.5 pt-1">
-            <div class="flex items-center text-[10px] text-gray-400">
-              <span class="w-16 text-red-400 font-semibold">Red Pass</span>
-              <div class="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden mx-2">
+            <div class="flex items-center text-[10px] opacity-80">
+              <span class="w-16 text-red-500 font-semibold">Red Pass</span>
+              <div class="flex-1 h-1.5 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
                 <div id="barRed" class="h-full bg-red-500 transition-all duration-300" style="width: 100%;"></div>
               </div>
-              <span id="valRed" class="w-8 text-right font-mono text-gray-300">100%</span>
+              <span id="valRed" class="w-8 text-right font-mono">100%</span>
             </div>
-            <div class="flex items-center text-[10px] text-gray-400">
-              <span class="w-16 text-green-400 font-semibold">Green Pass</span>
-              <div class="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden mx-2">
+            <div class="flex items-center text-[10px] opacity-80">
+              <span class="w-16 text-green-500 font-semibold">Green Pass</span>
+              <div class="flex-1 h-1.5 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
                 <div id="barGreen" class="h-full bg-green-500 transition-all duration-300" style="width: 100%;"></div>
               </div>
-              <span id="valGreen" class="w-8 text-right font-mono text-gray-300">100%</span>
+              <span id="valGreen" class="w-8 text-right font-mono">100%</span>
             </div>
-            <div class="flex items-center text-[10px] text-gray-400">
-              <span class="w-16 text-blue-400 font-semibold">Blue Pass</span>
-              <div class="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden mx-2">
+            <div class="flex items-center text-[10px] opacity-80">
+              <span class="w-16 text-blue-500 font-semibold">Blue Pass</span>
+              <div class="flex-1 h-1.5 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
                 <div id="barBlue" class="h-full bg-blue-500 transition-all duration-300" style="width: 100%;"></div>
               </div>
-              <span id="valBlue" class="w-8 text-right font-mono text-gray-300">100%</span>
+              <span id="valBlue" class="w-8 text-right font-mono">100%</span>
             </div>
           </div>
         </div>
@@ -214,31 +340,120 @@
 
     </div>
 
-    <!-- RIGHT COLUMN: PALETTE, PRESETS & ACTIVE STACK -->
+    <!-- RIGHT COLUMN: HARMONY MATCHER, PALETTE, PRESETS, ACTIVE STACK & STAGE -->
     <div class="md:col-span-7 space-y-4">
       
-      <!-- Navigation Tabs -->
-      <nav class="flex rounded-xl bg-iosCard p-1 border border-iosBorder space-x-1 text-xs">
-        <button onclick="switchTab('palette')" id="tabBtn-palette" class="flex-1 py-2 rounded-lg font-medium text-center transition-all bg-iosBlue text-white shadow-md">
+      <!-- Glassy Shimmer Navigation Tabs -->
+      <nav class="flex rounded-xl glass-card p-1 border border-black/10 dark:border-white/10 space-x-1 text-xs shimmer-tabstrip overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('harmony')" id="tabBtn-harmony" class="flex-1 py-2 px-2.5 rounded-lg font-bold text-center transition-all tab-btn-active shrink-0 flex items-center justify-center space-x-1">
+          <span>🎨 Harmony Matcher</span>
+        </button>
+        <button onclick="switchTab('palette')" id="tabBtn-palette" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0">
           12-Pack Palette
         </button>
-        <button onclick="switchTab('presets')" id="tabBtn-presets" class="flex-1 py-2 rounded-lg font-medium text-center text-gray-400 transition-all hover:text-white">
+        <button onclick="switchTab('presets')" id="tabBtn-presets" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0">
           Presets
         </button>
-        <button onclick="switchTab('stack')" id="tabBtn-stack" class="flex-1 py-2 rounded-lg font-medium text-center text-gray-400 transition-all hover:text-white flex items-center justify-center space-x-1">
+        <button onclick="switchTab('stack')" id="tabBtn-stack" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0 flex items-center justify-center space-x-1">
           <span>Active Stack</span>
-          <span id="tabBadgeStack" class="px-1.5 py-0.2 rounded-full bg-iosSubCard text-[10px] font-mono text-iosOrange border border-iosBorder">0</span>
+          <span id="tabBadgeStack" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold font-mono shadow-sm" style="background-color: var(--badge-bg); color: var(--badge-fg);">0</span>
         </button>
-        <button onclick="switchTab('settings')" id="tabBtn-settings" class="flex-1 py-2 rounded-lg font-medium text-center text-gray-400 transition-all hover:text-white">
-          Fixture
+        <button onclick="switchTab('settings')" id="tabBtn-settings" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0">
+          Fixture & Stage
         </button>
       </nav>
 
-      <!-- TAB 1: 12-PACK AMAZON PALETTE -->
-      <section id="tab-palette" class="space-y-3">
+      <!-- TAB 1: 🎨 HARMONY MATCHER (DEFAULT OPENING TAB) -->
+      <section id="tab-harmony" class="space-y-4">
+        
+        <div class="glass-card p-4 rounded-2xl space-y-4 border border-black/10 dark:border-white/10">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400">Outfit & Wardrobe Color Picker</h2>
+              <p class="text-[11px]" style="color: var(--text-sub)">Touch or drag the color wheel & tweak sliders to pick your subject's outfit tone.</p>
+            </div>
+            <!-- Current Outfit Color Swatch -->
+            <div class="flex items-center space-x-2">
+              <div id="outfitSwatch" class="w-9 h-9 rounded-full border-2 border-white/50 shadow-md" style="background-color: #00E5FF;"></div>
+              <div class="text-right">
+                <div id="outfitColorName" class="text-xs font-bold" style="color: var(--text-main)">Cobalt Blue</div>
+                <div id="outfitColorDegree" class="text-[10px] font-mono text-orange-500 font-bold">190° | 100% S | 50% L</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Color Wheel Canvas & Sliders Container -->
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center py-1">
+            <!-- 360° Color Wheel -->
+            <div class="sm:col-span-6 flex justify-center">
+              <div class="relative w-48 h-48 rounded-full shadow-2xl p-1 bg-black/20 dark:bg-black/40 border border-black/10 dark:border-white/10">
+                <canvas id="colorWheelCanvas" width="184" height="184" class="cursor-pointer rounded-full touch-none"></canvas>
+              </div>
+            </div>
+
+            <!-- Saturation & Lightness Sliders -->
+            <div class="sm:col-span-6 space-y-3 bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-black/10 dark:border-white/10">
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="font-semibold" style="color: var(--text-sub)">Saturation</span>
+                  <span id="satValueText" class="font-mono font-bold text-blue-500">100%</span>
+                </div>
+                <input type="range" id="satSlider" min="0" max="100" value="100" oninput="onSatLightChange()" class="w-full accent-blue-600 h-1.5 bg-black/20 rounded-lg cursor-pointer">
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs">
+                  <span class="font-semibold" style="color: var(--text-sub)">Lightness / Luminosity</span>
+                  <span id="lightValueText" class="font-mono font-bold text-pink-500">50%</span>
+                </div>
+                <input type="range" id="lightSlider" min="10" max="90" value="50" oninput="onSatLightChange()" class="w-full accent-pink-600 h-1.5 bg-black/20 rounded-lg cursor-pointer">
+              </div>
+            </div>
+          </div>
+
+          <!-- Harmony Selector Pills -->
+          <div class="space-y-1.5 pt-1">
+            <label class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--text-sub)">Select Color Harmony Rule</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setHarmonyMode('complementary')" id="harmBtn-complementary" class="py-2 rounded-xl text-xs font-bold border transition-all bg-gradient-to-r from-blue-600 to-violet-600 text-white border-blue-500 shadow-sm">
+                Pop (Complementary)
+              </button>
+              <button onclick="setHarmonyMode('analogous')" id="harmBtn-analogous" class="py-2 rounded-xl text-xs font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10" style="color: var(--text-sub)">
+                Mood (Analogous)
+              </button>
+              <button onclick="setHarmonyMode('triadic')" id="harmBtn-triadic" class="py-2 rounded-xl text-xs font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10" style="color: var(--text-sub)">
+                Vibrant (Triadic)
+              </button>
+            </div>
+          </div>
+
+          <!-- Hero Action Button with Light Sweep Shimmer Effect -->
+          <button id="btnDiscoverHarmonies" onclick="triggerDiscoverHarmonies()" class="touch-bounce btn-discover-shimmer w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 font-bold text-white text-xs shadow-lg shadow-pink-950/20 flex items-center justify-center space-x-2">
+            <span>✨</span>
+            <span>Discover Gel Harmonies</span>
+            <span>✨</span>
+          </button>
+        </div>
+
+        <!-- On-Demand Suggestions Output Section (Initially Hidden) -->
+        <div id="harmonySuggestionsSection" class="hidden space-y-3 transition-all duration-300 transform scale-95 opacity-0">
+          <div class="flex items-center justify-between px-1">
+            <h3 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Recommended Gel Setups</h3>
+            <span id="harmonyRuleTag" class="text-[10px] font-semibold text-blue-500 dark:text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Pop (Complementary)</span>
+          </div>
+
+          <div id="harmonyResultsList" class="space-y-2.5">
+            <!-- Dynamically injected upon clicking Discover -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 2: 12-PACK PALETTE -->
+      <section id="tab-palette" class="hidden space-y-3">
         <div class="flex items-center justify-between px-1">
-          <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Official 12-Piece Gel Sheet Set</h2>
-          <span class="text-[11px] text-gray-500">Tap gel sheet to add</span>
+          <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Official 12-Piece Gel Sheet Set</h2>
+          <span class="text-[11px]" style="color: var(--text-sub)">Tap gel sheet to add</span>
         </div>
 
         <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" id="gelPaletteGrid">
@@ -246,16 +461,16 @@
         </div>
       </section>
 
-      <!-- TAB 2: AUDITED PRESETS -->
+      <!-- TAB 3: AUDITED PRESETS -->
       <section id="tab-presets" class="hidden space-y-3">
         <!-- Category Filter Pills -->
         <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <button onclick="filterPresets('all')" id="catBtn-all" class="px-3 py-1.5 rounded-full font-medium bg-iosBlue text-white shrink-0">All Recipes</button>
-          <button onclick="filterPresets('brown')" id="catBtn-brown" class="px-3 py-1.5 rounded-full font-medium bg-iosSubCard text-gray-400 border border-iosBorder shrink-0">Earth & Browns</button>
-          <button onclick="filterPresets('warm')" id="catBtn-warm" class="px-3 py-1.5 rounded-full font-medium bg-iosSubCard text-gray-400 border border-iosBorder shrink-0">Warm & Sunset</button>
-          <button onclick="filterPresets('cyberpunk')" id="catBtn-cyberpunk" class="px-3 py-1.5 rounded-full font-medium bg-iosSubCard text-gray-400 border border-iosBorder shrink-0">Cyberpunk & Neon</button>
-          <button onclick="filterPresets('cinematic')" id="catBtn-cinematic" class="px-3 py-1.5 rounded-full font-medium bg-iosSubCard text-gray-400 border border-iosBorder shrink-0">Cinematic & Film</button>
-          <button onclick="filterPresets('pastels')" id="catBtn-pastels" class="px-3 py-1.5 rounded-full font-medium bg-iosSubCard text-gray-400 border border-iosBorder shrink-0">Soft Pastels</button>
+          <button onclick="filterPresets('all')" id="catBtn-all" class="px-3 py-1.5 rounded-full font-medium bg-blue-600 text-white shrink-0">All Recipes</button>
+          <button onclick="filterPresets('brown')" id="catBtn-brown" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Earth & Browns</button>
+          <button onclick="filterPresets('warm')" id="catBtn-warm" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Warm & Sunset</button>
+          <button onclick="filterPresets('cyberpunk')" id="catBtn-cyberpunk" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Cyberpunk & Neon</button>
+          <button onclick="filterPresets('cinematic')" id="catBtn-cinematic" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Cinematic & Film</button>
+          <button onclick="filterPresets('pastels')" id="catBtn-pastels" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Soft Pastels</button>
         </div>
 
         <div class="space-y-2.5 max-h-[420px] overflow-y-auto no-scrollbar pr-1" id="presetRecipesContainer">
@@ -263,14 +478,14 @@
         </div>
       </section>
 
-      <!-- TAB 3: STEP-BY-STEP PHYSICAL INSTALLATION ORDER -->
+      <!-- TAB 4: STEP-BY-STEP PHYSICAL INSTALLATION ORDER -->
       <section id="tab-stack" class="hidden space-y-3">
         <div class="flex items-center justify-between px-1">
           <div>
-            <h2 class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Physical Installation Order</h2>
-            <p class="text-[10px] text-gray-400">Step 1 is put on the lamp lens first, followed by outer layers.</p>
+            <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Physical Rig Installation</h2>
+            <p class="text-[10px]" style="color: var(--text-sub)">Step 1 goes on the lamp lens first, followed by outer layers.</p>
           </div>
-          <button onclick="clearAllGels()" class="text-[11px] text-red-400 hover:underline font-medium">Clear All</button>
+          <button onclick="clearAllGels()" class="text-[11px] text-red-500 font-semibold hover:underline">Clear All</button>
         </div>
 
         <div id="stackLayersList" class="space-y-2">
@@ -278,17 +493,17 @@
         </div>
       </section>
 
-      <!-- TAB 4: FIXTURE & STAGE SETTINGS -->
+      <!-- TAB 5: FIXTURE & STAGE SETTINGS -->
       <section id="tab-settings" class="hidden space-y-4">
         <div class="glass-card rounded-2xl p-4 space-y-3">
-          <h2 class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Base Light Source (Color Temperature)</h2>
+          <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Base Light Source (Color Temperature)</h2>
           <div class="space-y-2" id="lampOptions">
             <!-- Rendered dynamically -->
           </div>
         </div>
 
         <div class="glass-card rounded-2xl p-4 space-y-3">
-          <h2 class="text-xs font-semibold text-gray-300 uppercase tracking-wider">Background Wall Surface</h2>
+          <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Background Wall Surface</h2>
           <div class="grid grid-cols-3 gap-2" id="surfaceOptions">
             <!-- Rendered dynamically -->
           </div>
@@ -301,33 +516,33 @@
 
   <!-- iOS PWA INSTALLATION MODAL -->
   <div id="pwaModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-4">
-    <div class="glass-card w-full max-w-sm rounded-2xl p-5 space-y-4 text-center border border-iosBorder">
-      <div class="w-12 h-12 rounded-2xl bg-iosBlue/20 text-iosBlue border border-iosBlue/30 mx-auto flex items-center justify-center">
+    <div class="glass-card w-full max-w-sm rounded-2xl p-5 space-y-4 text-center border border-white/10">
+      <div class="w-12 h-12 rounded-2xl bg-blue-600/20 text-blue-400 border border-blue-500/30 mx-auto flex items-center justify-center">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
       </div>
-      <h3 class="text-base font-bold text-white">Save GelStack Pro on iPhone</h3>
-      <p class="text-xs text-gray-300 leading-relaxed">
-        Save this visualizer directly to your iPhone Home Screen so it opens full-screen like a native app on set!
+      <h3 class="text-base font-bold" style="color: var(--text-main)">Save GelStack Pro on iPhone</h3>
+      <p class="text-xs leading-relaxed" style="color: var(--text-sub)">
+        Save this app directly to your Home Screen so it opens full-screen like a native app on set!
       </p>
-      <div class="text-left bg-iosSubCard p-3 rounded-xl space-y-2 text-xs text-gray-300 border border-iosBorder">
+      <div class="text-left bg-black/20 p-3 rounded-xl space-y-2 text-xs border border-white/10" style="color: var(--text-main)">
         <div class="flex items-center space-x-2">
-          <span class="w-5 h-5 rounded-full bg-iosBlue text-white text-[10px] font-bold flex items-center justify-center">1</span>
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">1</span>
           <span>Tap the <strong>Share</strong> button in Safari's bottom bar.</span>
         </div>
         <div class="flex items-center space-x-2">
-          <span class="w-5 h-5 rounded-full bg-iosBlue text-white text-[10px] font-bold flex items-center justify-center">2</span>
+          <span class="w-5 h-5 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">2</span>
           <span>Scroll down and select <strong>"Add to Home Screen"</strong>.</span>
         </div>
       </div>
-      <button onclick="togglePwaModal()" class="w-full py-2.5 rounded-xl bg-iosBlue font-semibold text-white text-xs touch-bounce">
+      <button onclick="togglePwaModal()" class="w-full py-2.5 rounded-xl bg-blue-600 font-semibold text-white text-xs touch-bounce">
         Got it!
       </button>
     </div>
   </div>
 
   <!-- Toast Notification -->
-  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-iosCard border border-iosBlue/40 text-white text-xs font-medium shadow-2xl transition-all duration-300 opacity-0 pointer-events-none transform translate-y-4 flex items-center space-x-2">
-    <span class="w-2 h-2 rounded-full bg-iosBlue"></span>
+  <div id="toastNotification" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-full bg-black/90 border border-blue-500/40 text-white text-xs font-medium shadow-2xl transition-all duration-300 opacity-0 pointer-events-none transform translate-y-4 flex items-center space-x-2">
+    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
     <span id="toastMessage">Recipe copied to clipboard!</span>
   </div>
 
@@ -338,21 +553,22 @@
     const GELS = [
       { id: 'black', name: 'Black (ND Shading)', r: 0.40, g: 0.40, b: 0.40, hex: '#333333', tag: 'ND', isND: true },
       { id: 'white', name: 'Soft Bright White', r: 0.98, g: 0.98, b: 0.98, hex: '#F8F9FA', tag: 'DIFF', isDiffuser: true },
-      { id: 'yellow', name: 'Yellow', r: 1.00, g: 0.92, b: 0.15, hex: '#FFEB3B', tag: 'YEL' },
-      { id: 'red', name: 'Red', r: 0.92, g: 0.18, b: 0.15, hex: '#E53935', tag: 'RED' },
-      { id: 'pink', name: 'Pink', r: 1.00, g: 0.25, b: 0.51, hex: '#FF4081', tag: 'PNK' },
-      { id: 'fluo_green', name: 'Fluorescent Green', r: 0.46, g: 1.00, b: 0.10, hex: '#76FF03', tag: 'FL-GRN' },
-      { id: 'purple', name: 'Purple', r: 0.56, g: 0.14, b: 0.67, hex: '#8E24AA', tag: 'PURP' },
-      { id: 'green', name: 'Green', r: 0.18, g: 0.70, b: 0.20, hex: '#4CAF50', tag: 'GRN' },
-      { id: 'light_blue', name: 'Light Blue', r: 0.10, g: 0.90, b: 1.00, hex: '#00E5FF', tag: 'L-BLU' },
-      { id: 'dark_blue', name: 'Dark Blue', r: 0.10, g: 0.40, b: 0.85, hex: '#1565C0', tag: 'D-BLU' },
-      { id: 'orange', name: 'Orange', r: 1.00, g: 0.43, b: 0.08, hex: '#FF6D00', tag: 'ORG' },
-      { id: 'rose_red', name: 'Rose Red', r: 0.80, g: 0.10, b: 0.36, hex: '#C2185B', tag: 'ROSE' }
+      { id: 'yellow', name: 'Yellow', r: 1.00, g: 0.92, b: 0.15, hex: '#FFEB3B', tag: 'YEL', hue: 55 },
+      { id: 'red', name: 'Red', r: 0.92, g: 0.18, b: 0.15, hex: '#E53935', tag: 'RED', hue: 5 },
+      { id: 'pink', name: 'Pink', r: 1.00, g: 0.35, b: 0.65, hex: '#FF4081', tag: 'PNK', hue: 335 },
+      { id: 'fluo_green', name: 'Fluorescent Green', r: 0.46, g: 1.00, b: 0.10, hex: '#76FF03', tag: 'FL-GRN', hue: 95 },
+      { id: 'purple', name: 'Purple', r: 0.56, g: 0.14, b: 0.67, hex: '#8E24AA', tag: 'PURP', hue: 285 },
+      { id: 'green', name: 'Green', r: 0.18, g: 0.75, b: 0.25, hex: '#4CAF50', tag: 'GRN', hue: 130 },
+      { id: 'light_blue', name: 'Light Blue', r: 0.10, g: 0.85, b: 1.00, hex: '#00E5FF', tag: 'L-BLU', hue: 190 },
+      { id: 'dark_blue', name: 'Dark Blue', r: 0.10, g: 0.35, b: 0.85, hex: '#1565C0', tag: 'D-BLU', hue: 215 },
+      { id: 'orange', name: 'Orange', r: 1.00, g: 0.55, b: 0.08, hex: '#FF6D00', tag: 'ORG', hue: 25 },
+      { id: 'rose_red', name: 'Rose Red', r: 0.90, g: 0.22, b: 0.42, hex: '#D81B60', tag: 'ROSE', hue: 330 }
     ];
 
     const FIXTURES = [
       { id: 'daylight', name: '5600K Daylight LED', r: 1.0, g: 1.0, b: 1.0, desc: 'Pure neutral white daylight.' },
       { id: 'tungsten', name: '3200K Tungsten', r: 1.0, g: 0.78, b: 0.54, desc: 'Warm studio tungsten / halogen.' },
+      { id: 'skylight', name: '6500K Skylight LED', r: 0.9, g: 0.95, b: 1.0, desc: 'Cool sky-blue daylight fixture.' },
       { id: 'warm_led', name: '2700K Soft Warm', r: 1.0, g: 0.70, b: 0.40, desc: 'Cozy golden household light source.' }
     ];
 
@@ -364,12 +580,71 @@
     ];
 
     const PRESETS = [
-      // Earth & Browns
+      // Single Gel & Simple Options (7 Single Gel Profiles)
+      {
+        id: 'single_yellow',
+        category: 'warm',
+        title: "Pure Yellow Sheet",
+        gels: ['yellow'],
+        hue: 55,
+        desc: "Single Yellow gel casting bright golden solar light."
+      },
+      {
+        id: 'single_red',
+        category: 'warm',
+        title: "Pure Red Sheet",
+        gels: ['red'],
+        hue: 5,
+        desc: "Single Red gel producing intense vibrant key or rim light."
+      },
+      {
+        id: 'single_light_blue',
+        category: 'cyberpunk',
+        title: "Pure Light Blue Sheet",
+        gels: ['light_blue'],
+        hue: 190,
+        desc: "Single Light Blue gel casting energetic cyan reflections."
+      },
+      {
+        id: 'single_dark_blue',
+        category: 'cinematic',
+        title: "Pure Dark Blue Sheet",
+        gels: ['dark_blue'],
+        hue: 215,
+        desc: "Single Dark Blue gel for dramatic night / moonlight scenes."
+      },
+      {
+        id: 'single_purple',
+        category: 'cyberpunk',
+        title: "Pure Purple Sheet",
+        gels: ['purple'],
+        hue: 285,
+        desc: "Single Purple gel creating deep royal violet accents."
+      },
+      {
+        id: 'single_green',
+        category: 'cinematic',
+        title: "Pure Green Sheet",
+        gels: ['green'],
+        hue: 130,
+        desc: "Single Green gel for rich emerald background washes."
+      },
+      {
+        id: 'single_rose_red',
+        category: 'warm',
+        title: "Pure Rose Red Sheet",
+        gels: ['rose_red'],
+        hue: 330,
+        desc: "Single Rose Red gel casting vibrant magenta-crimson warmth."
+      },
+
+      // Earth & Browns (5 Stacks)
       {
         id: 'deep_mahogany',
         category: 'brown',
         title: "Deep Mahogany",
         gels: ['rose_red', 'purple', 'orange'],
+        hue: 18,
         desc: "Pantone 19-1420 accurate Deep Mahogany: Rose Red, Purple, and Orange subtract into a rich reddish-brown timber tone."
       },
       {
@@ -377,6 +652,7 @@
         category: 'brown',
         title: "Rich Sepia Brown",
         gels: ['orange', 'black'],
+        hue: 28,
         desc: "Vibrant Orange shaded down with ND Neutral Density into antique warm sepia."
       },
       {
@@ -384,6 +660,7 @@
         category: 'brown',
         title: "Earthy Chestnut",
         gels: ['red', 'green'],
+        hue: 35,
         desc: "Complementary Red and Green cut each other's saturation into a deep natural chestnut brown."
       },
       {
@@ -391,6 +668,7 @@
         category: 'brown',
         title: "Dark Chocolate",
         gels: ['orange', 'purple'],
+        hue: 22,
         desc: "Purple dampens Orange brightness into rich, dark chocolate."
       },
       {
@@ -398,15 +676,17 @@
         category: 'brown',
         title: "Tan Amber",
         gels: ['yellow', 'black'],
+        hue: 45,
         desc: "Yellow subdued with ND Black for warm tan accent lighting."
       },
 
-      // Warm & Sunset
+      // Warm & Sunset (5 Stacks)
       {
         id: 'deep_honey',
         category: 'warm',
         title: "Deep Honey Amber",
         gels: ['yellow', 'orange'],
+        hue: 40,
         desc: "Pure Yellow and Orange overlay creating a bright, vibrant honey-amber glow."
       },
       {
@@ -414,6 +694,7 @@
         category: 'warm',
         title: "Crimson Dusk",
         gels: ['rose_red', 'purple'],
+        hue: 338,
         desc: "Rose Red paired with Purple subtracts green-yellow wavelengths into a dramatic twilight crimson."
       },
       {
@@ -421,15 +702,33 @@
         category: 'warm',
         title: "Sunset Horizon",
         gels: ['red', 'orange'],
+        hue: 14,
         desc: "Fiery Orange and intense Red gradient wash for deep horizon warmth."
       },
+      {
+        id: 'amber_dusk',
+        category: 'warm',
+        title: "Amber Dusk",
+        gels: ['rose_red', 'yellow'],
+        hue: 28,
+        desc: "Rose Red combined with Yellow producing vibrant golden terracotta."
+      },
+      {
+        id: 'crimson_noir',
+        category: 'warm',
+        title: "Crimson Noir",
+        gels: ['rose_red', 'black'],
+        hue: 340,
+        desc: "Rose Red shaded with ND Black for moody low-key ruby key lighting."
+      },
 
-      // Cyberpunk & Neon
+      // Cyberpunk & Neon (3 Stacks)
       {
         id: 'blade_runner',
         category: 'cyberpunk',
         title: "Blade Runner Cyan",
         gels: ['light_blue', 'dark_blue'],
+        hue: 195,
         desc: "Light Blue and Dark Blue layered for intense sci-fi cyber ambiance."
       },
       {
@@ -437,6 +736,7 @@
         category: 'cyberpunk',
         title: "Neon Violet",
         gels: ['pink', 'purple'],
+        hue: 285,
         desc: "Pink and Purple overlap for electric synthwave glow."
       },
       {
@@ -444,15 +744,17 @@
         category: 'cyberpunk',
         title: "Acid Toxic Green",
         gels: ['fluo_green', 'yellow'],
+        hue: 85,
         desc: "Electrifying neon lime-yellow beam glow."
       },
 
-      // Cinematic & Film
+      // Cinematic & Film (3 Stacks)
       {
         id: 'kodak_portra',
         category: 'cinematic',
         title: "Kodak Warm Film",
         gels: ['yellow', 'pink'],
+        hue: 32,
         desc: "Warm amber stack capturing vintage 35mm film stock aesthetics."
       },
       {
@@ -460,15 +762,25 @@
         category: 'cinematic',
         title: "Moody Forest Green",
         gels: ['dark_blue', 'green'],
+        hue: 155,
         desc: "Deep oceanic blue and green mood fill."
       },
+      {
+        id: 'midnight_teal',
+        category: 'cinematic',
+        title: "Midnight Teal",
+        gels: ['dark_blue', 'fluo_green'],
+        hue: 175,
+        desc: "Dark Blue and Fluorescent Green creating deep cinematic teal shadows."
+      },
 
-      // Soft Pastels
+      // Soft Pastels (5 Stacks)
       {
         id: 'soft_peach',
         category: 'pastels',
         title: "Soft Peach Wash",
         gels: ['white', 'orange'],
+        hue: 25,
         desc: "Diffused pastel orange for smooth skin lighting."
       },
       {
@@ -476,6 +788,7 @@
         category: 'pastels',
         title: "Pastel Mint",
         gels: ['white', 'fluo_green'],
+        hue: 110,
         desc: "Softened fluorescent green creating a gentle mint background glow."
       },
       {
@@ -483,7 +796,24 @@
         category: 'pastels',
         title: "Pastel Lavender",
         gels: ['white', 'purple'],
+        hue: 275,
         desc: "Diffused purple for dreamlike pastel violet highlights."
+      },
+      {
+        id: 'muted_ice_blue',
+        category: 'pastels',
+        title: "Muted Ice Blue",
+        gels: ['white', 'light_blue'],
+        hue: 195,
+        desc: "Softened light blue for clean ice-cold pastel tones."
+      },
+      {
+        id: 'electric_magenta',
+        category: 'pastels',
+        title: "Electric Magenta",
+        gels: ['pink', 'rose_red'],
+        hue: 335,
+        desc: "Vibrant Pink and Rose Red overlap for rich magenta highlights."
       }
     ];
 
@@ -496,28 +826,415 @@
     let activePresetCategory = 'all';
     let activePresetTitle = null;
 
-    window.addEventListener('DOMContentLoaded', () => {
-      renderPalette();
-      renderPresets();
-      renderFixtureOptions();
-      renderSurfaceOptions();
-      updateAppUI();
-    });
+    // Harmony Matcher State
+    let selectedOutfitHue = 190; // Default to Cobalt Blue
+    let selectedOutfitSat = 100;
+    let selectedOutfitLight = 50;
+    let harmonyMode = 'complementary'; // 'complementary' | 'analogous' | 'triadic'
+    let cachedHarmonyResults = null; // Stores batch calculated recommendations for all 3 modes
 
     /* ==========================================================================
-       UI RENDERING FUNCTIONS
+       SUBTRACTIVE OPTICS ENGINE & ACCURATE PREVIEW CALCULATOR
+       ========================================================================== */
+    function computeSubtractiveOpticsHex(gelIds, fixture = selectedFixture) {
+      let r = fixture.r;
+      let g = fixture.g;
+      let b = fixture.b;
+
+      gelIds.forEach(gid => {
+        const gel = GELS.find(x => x.id === gid);
+        if (!gel) return;
+        if (gel.isDiffuser) {
+          r = r * 0.90 + 0.08;
+          g = g * 0.90 + 0.08;
+          b = b * 0.90 + 0.08;
+        } else if (gel.isND) {
+          r *= gel.r;
+          g *= gel.g;
+          b *= gel.b;
+        } else {
+          r *= gel.r;
+          g *= gel.g;
+          b *= gel.b;
+        }
+      });
+
+      const baseLum = (fixture.r * 0.2126 + fixture.g * 0.7152 + fixture.b * 0.0722);
+      const currentLum = (r * 0.2126 + g * 0.7152 + b * 0.0722);
+      const yieldPct = Math.max(1, Math.round((currentLum / baseLum) * 100));
+
+      let previewR = r;
+      let previewG = g;
+      let previewB = b;
+
+      const maxChannel = Math.max(previewR, previewG, previewB);
+      if (maxChannel > 0 && gelIds.length > 0) {
+        const targetBrightness = Math.max(0.40, Math.min(0.85, Math.pow(yieldPct / 100, 0.32)));
+        const scale = targetBrightness / maxChannel;
+        previewR = Math.min(1.0, previewR * scale);
+        previewG = Math.min(1.0, previewG * scale);
+        previewB = Math.min(1.0, previewB * scale);
+      }
+
+      const byteR = Math.round(previewR * 255);
+      const byteG = Math.round(previewG * 255);
+      const byteB = Math.round(previewB * 255);
+
+      return "#" + [byteR, byteG, byteB].map(x => x.toString(16).padStart(2, '0')).join('');
+    }
+
+    /* ==========================================================================
+       REFINED COLOR WHEEL CANVAS & HARMONY MATCHER LOGIC WITH SLIDERS
+       ========================================================================== */
+    function initColorWheelCanvas() {
+      const canvas = document.getElementById('colorWheelCanvas');
+      if (!canvas) return;
+
+      drawColorWheel();
+
+      let isDragging = false;
+      const handleInput = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left - canvas.width / 2;
+        const y = clientY - rect.top - canvas.height / 2;
+        
+        let angle = Math.atan2(y, x) * (180 / Math.PI);
+        if (angle < 0) angle += 360;
+
+        selectedOutfitHue = Math.round(angle);
+        updateOutfitSwatchDisplay();
+        drawColorWheel();
+        // On-demand behavior: do NOT trigger live recommendation updates during drag
+      };
+
+      canvas.addEventListener('mousedown', (e) => { isDragging = true; handleInput(e); });
+      window.addEventListener('mousemove', (e) => { if (isDragging) handleInput(e); });
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      canvas.addEventListener('touchstart', (e) => { isDragging = true; handleInput(e); });
+    window.addEventListener('touchmove', (e) => { if (isDragging) handleInput(e); });
+    window.addEventListener('touchend', () => { isDragging = false; });
+    
+    updateOutfitSwatchDisplay();
+  }
+
+  function onSatLightChange() {
+    selectedOutfitSat = parseInt(document.getElementById('satSlider').value);
+    selectedOutfitLight = parseInt(document.getElementById('lightSlider').value);
+    document.getElementById('satValueText').innerText = `${selectedOutfitSat}%`;
+    document.getElementById('lightValueText').innerText = `${selectedOutfitLight}%`;
+    updateOutfitSwatchDisplay();
+    // On-demand behavior: recommendations only refresh when Discover button is clicked
+  }
+
+  function drawColorWheel() {
+      const canvas = document.getElementById('colorWheelCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      const radius = cx - 6;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let angle = 0; angle < 360; angle += 1) {
+        const startAngle = (angle - 1) * Math.PI / 180;
+        const endAngle = (angle + 1) * Math.PI / 180;
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.fillStyle = `hsl(${angle}, 100%, 50%)`;
+        ctx.fill();
+      }
+
+      const innerGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+      innerGrad.addColorStop(0, 'rgba(255, 255, 255, 0.92)');
+      innerGrad.addColorStop(0.35, 'rgba(255, 255, 255, 0.45)');
+      innerGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+      ctx.fillStyle = innerGrad;
+      ctx.fill();
+
+      // Refined handle indicator (Slimmer border, subtle inner ring)
+      const handleRad = selectedOutfitHue * Math.PI / 180;
+      const handleDist = radius * 0.72;
+      const hx = cx + handleDist * Math.cos(handleRad);
+      const hy = cy + handleDist * Math.sin(handleRad);
+
+      ctx.save();
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = 'rgba(219, 39, 119, 0.5)';
+
+      ctx.beginPath();
+      ctx.arc(hx, hy, 7, 0, 2 * Math.PI);
+      ctx.fillStyle = `hsl(${selectedOutfitHue}, ${selectedOutfitSat}%, ${selectedOutfitLight}%)`;
+      ctx.fill();
+
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(hx, hy, 3.5, 0, 2 * Math.PI);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function updateOutfitSwatchDisplay() {
+      const swatch = document.getElementById('outfitSwatch');
+      const nameEl = document.getElementById('outfitColorName');
+      const degEl = document.getElementById('outfitColorDegree');
+
+      const hex = hslToHex(selectedOutfitHue, selectedOutfitSat, selectedOutfitLight);
+      if (swatch) swatch.style.backgroundColor = hex;
+      if (degEl) degEl.innerText = `${selectedOutfitHue}° | ${selectedOutfitSat}% S | ${selectedOutfitLight}% L`;
+      if (nameEl) nameEl.innerText = getDescriptiveColorName(selectedOutfitHue, selectedOutfitSat, selectedOutfitLight);
+    }
+
+    function setHarmonyMode(mode) {
+      harmonyMode = mode;
+      ['complementary', 'analogous', 'triadic'].forEach(m => {
+        const btn = document.getElementById(`harmBtn-${m}`);
+        if (btn) {
+          if (m === mode) {
+            btn.className = 'py-2 rounded-xl text-xs font-bold border transition-all bg-gradient-to-r from-blue-600 to-violet-600 text-white border-blue-500 shadow-sm';
+            btn.style.color = '#ffffff';
+          } else {
+            btn.className = 'py-2 rounded-xl text-xs font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10';
+            btn.style.color = 'var(--text-sub)';
+          }
+        }
+      });
+
+      // If user has already clicked Discover, instantly display pre-calculated list for the newly selected pill
+      if (cachedHarmonyResults) {
+        renderHarmonyResults(mode);
+      }
+    }
+
+    function triggerDiscoverHarmonies() {
+      const btn = document.getElementById('btnDiscoverHarmonies');
+      if (btn) {
+        btn.classList.remove('active-shine');
+        void btn.offsetWidth; // Trigger reflow for animation restart
+        btn.classList.add('active-shine');
+        setTimeout(() => btn.classList.remove('active-shine'), 900);
+      }
+      triggerHaptic();
+
+      // Batch calculate and store recommendations for ALL 3 harmony rules simultaneously
+      batchCalculateAllHarmonies();
+
+      // Render for currently active pill
+      renderHarmonyResults(harmonyMode);
+
+      // Reveal recommendations container
+      const section = document.getElementById('harmonySuggestionsSection');
+      if (section) {
+        section.classList.remove('hidden');
+        setTimeout(() => {
+          section.classList.remove('scale-95', 'opacity-0');
+          section.classList.add('scale-100', 'opacity-100');
+        }, 20);
+      }
+    }
+
+    function batchCalculateAllHarmonies() {
+      cachedHarmonyResults = {
+        complementary: computeHarmonyMatches('complementary', selectedOutfitHue),
+        analogous: computeHarmonyMatches('analogous', selectedOutfitHue),
+        triadic: computeHarmonyMatches('triadic', selectedOutfitHue)
+      };
+    }
+
+    function computeHarmonyMatches(mode, outfitHue) {
+      let targetHues = [];
+
+      if (mode === 'complementary') {
+        targetHues.push((outfitHue + 180) % 360);
+      } else if (mode === 'analogous') {
+        targetHues.push((outfitHue + 30) % 360);
+        targetHues.push((outfitHue - 30 + 360) % 360);
+      } else if (mode === 'triadic') {
+        targetHues.push((outfitHue + 120) % 360);
+        targetHues.push((outfitHue + 240) % 360);
+      }
+
+      // Rank all 28 Presets by closest Hue distance to target harmony angles
+      const rankedPresets = PRESETS.map(preset => {
+        let minDist = 360;
+        targetHues.forEach(th => {
+          const dist = Math.min(Math.abs(preset.hue - th), 360 - Math.abs(preset.hue - th));
+          if (dist < minDist) minDist = dist;
+        });
+        return { preset, dist: minDist };
+      }).sort((a, b) => a.dist - b.dist);
+
+      const topMatches = [];
+      const usedIds = new Set();
+      
+      for (let r of rankedPresets) {
+        if (topMatches.length >= 3) break;
+        if (!usedIds.has(r.preset.id)) {
+          topMatches.push(r.preset);
+          usedIds.add(r.preset.id);
+        }
+      }
+
+      return topMatches;
+    }
+
+    function renderHarmonyResults(mode) {
+      const tag = document.getElementById('harmonyRuleTag');
+      if (tag) {
+        if (mode === 'complementary') tag.innerText = 'Pop (Complementary)';
+        else if (mode === 'analogous') tag.innerText = 'Mood (Analogous)';
+        else if (mode === 'triadic') tag.innerText = 'Vibrant (Triadic)';
+      }
+
+      const results = cachedHarmonyResults ? cachedHarmonyResults[mode] : [];
+      const container = document.getElementById('harmonyResultsList');
+      if (!container) return;
+
+      container.innerHTML = results.map(preset => {
+        const gelNames = preset.gels.map(gid => GELS.find(g => g.id === gid)?.name).join(' + ');
+        const swatchHex = computeSubtractiveOpticsHex(preset.gels);
+
+        return `
+          <div class="glass-card p-3 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-between space-x-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl shadow-md border border-black/20 dark:border-white/20 flex-shrink-0 transition-colors duration-300 flex items-center justify-center font-bold text-[9px] text-white/90 drop-shadow" style="background-color: ${swatchHex}">
+                ${preset.gels.length === 1 ? '1 GEL' : 'STACK'}
+              </div>
+              <div class="space-y-0.5">
+                <div class="text-xs font-bold" style="color: var(--text-main)">${preset.title}</div>
+                <div class="text-[10px] text-amber-600 dark:text-iosOrange font-semibold">${gelNames}</div>
+                <div class="text-[10px] leading-tight opacity-75" style="color: var(--text-sub)">${preset.desc}</div>
+              </div>
+            </div>
+
+            <button onclick="applyPresetAndJumpToRig('${preset.id}')" 
+                    class="touch-bounce px-3 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-bold text-xs shrink-0 flex items-center space-x-1 shadow-md">
+              <span>Setup How-To</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function applyPresetAndJumpToRig(presetId) {
+      applyPreset(presetId);
+      switchTab('stack');
+      showToast('Loaded into Active Stack! Follow physical setup steps below.');
+    }
+
+    /* ==========================================================================
+       PRECISION HSL PANTONE & DESCRIPTIVE COLOR NAMING ENGINE
+       ========================================================================== */
+    function getDescriptiveColorName(hue, sat, light) {
+      // Very high lightness (Off-Whites & Pastels)
+      if (light >= 85) {
+        if (sat < 15) return "Ivory / Off-White";
+        if (sat < 40) return "Pale Linen";
+        if (hue >= 15 && hue < 50) return "Warm Peach Pastel";
+        if (hue >= 170 && hue < 240) return "Ice Blue / Powder Cyan";
+        return "Soft Pastel Glow";
+      }
+
+      // Very low lightness (Darks, Blacks & Deep Earths)
+      if (light <= 25) {
+        if (sat < 15) return "Charcoal / Onyx";
+        if (hue >= 10 && hue < 40) return "Deep Mahogany / Walnut";
+        if (hue >= 40 && hue < 80) return "Dark Olive / Bronze";
+        if (hue >= 120 && hue < 170) return "Deep Pine Green";
+        if (hue >= 200 && hue < 260) return "Midnight Navy Blue";
+        if (hue >= 260 && hue < 330) return "Vintage Plum / Espresso";
+        return "Deep Burgundy / Wine";
+      }
+
+      // Low Saturation (Neutrals, Muted Tones, Beiges, Taus, Grays)
+      if (sat < 25) {
+        if (light >= 65) {
+          if (hue >= 10 && hue < 50) return "Sand Beige";
+          if (hue >= 50 && hue < 100) return "Sage Gray";
+          if (hue >= 170 && hue < 260) return "Soft Fog Blue";
+          if (hue >= 260 && hue < 320) return "Muted Mauve";
+          if (hue >= 320 || hue < 10) return "Dusty Rose";
+          return "Light Pebble Gray";
+        }
+        if (light >= 35) {
+          if (hue >= 10 && hue < 40) return "Warm Taupe";
+          if (hue >= 40 && hue < 90) return "Olive Drab / Moss";
+          if (hue >= 170 && hue < 250) return "Slate Blue";
+          if (hue >= 250 && hue < 320) return "Smoky Lavender";
+          if (hue >= 320 || hue < 10) return "Dusty Cedar";
+          return "Neutral Ash Gray";
+        }
+        if (hue >= 10 && hue < 40) return "Burnt Umber";
+        if (hue >= 170 && hue < 260) return "Dark Slate";
+        return "Dark Charcoal";
+      }
+
+      // Medium Saturation (Rich Muted Colors & Terracotta/Camels)
+      if (sat < 60) {
+        if (hue >= 10 && hue < 30) {
+          return light < 50 ? "Terracotta / Burnt Sienna" : "Warm Coral Dust";
+        }
+        if (hue >= 30 && hue < 55) {
+          return light < 55 ? "Warm Camel / Tan" : "Desert Sand";
+        }
+        if (hue >= 55 && hue < 90) return "Sage Green";
+        if (hue >= 90 && hue < 160) return "Muted Emerald";
+        if (hue >= 160 && hue < 240) return "Dusty Cyan / Slate";
+        if (hue >= 240 && hue < 310) return "Vintage Violet / Lilac";
+        if (hue >= 310 && hue < 345) return "Dusty Rose Pink";
+        return "Muted Crimson";
+      }
+
+      // High Saturation Colors
+      if (hue >= 345 || hue < 15) return "Crimson Red";
+      if (hue >= 15 && hue < 45) return "Warm Orange / Coral";
+      if (hue >= 45 && hue < 70) return "Golden Yellow";
+      if (hue >= 70 && hue < 150) return "Emerald Green";
+      if (hue >= 150 && hue < 200) return "Cobalt Cyan / Blue";
+      if (hue >= 200 && hue < 260) return "Deep Sapphire Blue";
+      if (hue >= 260 && hue < 315) return "Electric Purple";
+      return "Magenta Pink";
+    }
+
+    function hslToHex(h, s, l) {
+      l /= 100;
+      const a = s * Math.min(l, 1 - l) / 100;
+      const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+      };
+      return `#${f(0)}${f(8)}${f(4)}`;
+    }
+
+    /* ==========================================================================
+       UI RENDERING FUNCTIONS FOR ALL TABS
        ========================================================================== */
     function renderPalette() {
       const grid = document.getElementById('gelPaletteGrid');
       grid.innerHTML = GELS.map(gel => `
         <button onclick="addGelToStack('${gel.id}')" 
-                class="touch-bounce glass-card p-2.5 rounded-xl flex flex-col items-center justify-between border border-iosBorder hover:border-iosBlue transition-all text-center group">
-          <div class="w-11 h-11 rounded-lg shadow-inner mb-2 relative overflow-hidden flex items-center justify-center border border-white/20"
+                class="touch-bounce glass-card p-2.5 rounded-xl flex flex-col items-center justify-between border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all text-center group">
+          <div class="w-11 h-11 rounded-lg shadow-inner mb-2 relative overflow-hidden flex items-center justify-center border border-black/20 dark:border-white/20"
                style="background-color: ${gel.hex};">
             <span class="text-[8px] font-bold ${gel.id === 'white' ? 'text-gray-900' : 'text-white/90'} drop-shadow uppercase tracking-wider">${gel.tag}</span>
           </div>
-          <span class="text-[11px] font-semibold text-gray-200 group-hover:text-iosBlue truncate w-full">${gel.name}</span>
-          <span class="text-[10px] text-gray-500 mt-0.5">+ Add Sheet</span>
+          <span class="text-[11px] font-semibold group-hover:text-blue-500 truncate w-full" style="color: var(--text-main)">${gel.name}</span>
+          <span class="text-[10px] mt-0.5 opacity-70" style="color: var(--text-sub)">+ Add Sheet</span>
         </button>
       `).join('');
     }
@@ -531,17 +1248,17 @@
       container.innerHTML = filtered.map((preset) => {
         const gelNames = preset.gels.map(gid => GELS.find(g => g.id === gid)?.name).join(' + ');
         return `
-          <div class="glass-card p-3 rounded-xl border border-iosBorder flex items-center justify-between">
+          <div class="glass-card p-3 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-between">
             <div class="space-y-1 pr-2">
               <div class="flex items-center space-x-2">
-                <h3 class="text-xs font-bold text-white">${preset.title}</h3>
-                <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-iosSubCard text-iosBlue border border-iosBorder uppercase">${preset.category}</span>
+                <h3 class="text-xs font-bold" style="color: var(--text-main)">${preset.title}</h3>
+                <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-black/10 dark:bg-black/30 text-blue-500 dark:text-blue-400 border border-blue-500/20 uppercase">${preset.category}</span>
               </div>
-              <p class="text-[11px] text-iosOrange font-medium">${gelNames}</p>
-              <p class="text-[10px] text-gray-400 leading-tight">${preset.desc}</p>
+              <p class="text-[11px] text-amber-600 dark:text-iosOrange font-semibold">${gelNames}</p>
+              <p class="text-[10px] leading-tight opacity-75" style="color: var(--text-sub)">${preset.desc}</p>
             </div>
             <button onclick="applyPreset('${preset.id}')" 
-                    class="touch-bounce shrink-0 px-3 py-2 rounded-xl bg-iosBlue text-white font-medium text-xs shadow-md">
+                    class="touch-bounce shrink-0 px-3 py-2 rounded-xl bg-blue-600 text-white font-medium text-xs shadow-md">
               Apply
             </button>
           </div>
@@ -555,9 +1272,11 @@
         const btn = document.getElementById(`catBtn-${c}`);
         if (btn) {
           if (c === cat) {
-            btn.className = 'px-3 py-1.5 rounded-full font-medium bg-iosBlue text-white shrink-0';
+            btn.className = 'px-3 py-1.5 rounded-full font-medium bg-blue-600 text-white shrink-0';
+            btn.style.color = '#ffffff';
           } else {
-            btn.className = 'px-3 py-1.5 rounded-full font-medium bg-iosSubCard text-gray-400 border border-iosBorder shrink-0';
+            btn.className = 'px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0';
+            btn.style.color = 'var(--text-sub)';
           }
         }
       });
@@ -568,12 +1287,12 @@
       const container = document.getElementById('lampOptions');
       container.innerHTML = FIXTURES.map(fix => `
         <button onclick="selectFixture('${fix.id}')" 
-                class="touch-bounce w-full p-3 rounded-xl border flex items-center justify-between text-left transition-all ${selectedFixture.id === fix.id ? 'bg-iosBlue/15 border-iosBlue text-white' : 'bg-iosSubCard border-iosBorder text-gray-300'}">
+                class="touch-bounce w-full p-3 rounded-xl border flex items-center justify-between text-left transition-all ${selectedFixture.id === fix.id ? 'bg-blue-600/15 border-blue-500' : 'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10'}">
           <div>
-            <div class="text-xs font-bold">${fix.name}</div>
-            <div class="text-[10px] text-gray-400">${fix.desc}</div>
+            <div class="text-xs font-bold" style="color: var(--text-main)">${fix.name}</div>
+            <div class="text-[10px]" style="color: var(--text-sub)">${fix.desc}</div>
           </div>
-          ${selectedFixture.id === fix.id ? '<span class="text-iosBlue text-xs font-bold">Active</span>' : ''}
+          ${selectedFixture.id === fix.id ? '<span class="text-blue-500 dark:text-blue-400 text-xs font-bold">Active</span>' : ''}
         </button>
       `).join('');
     }
@@ -582,7 +1301,7 @@
       const container = document.getElementById('surfaceOptions');
       container.innerHTML = SURFACES.map(surf => `
         <button onclick="selectSurface('${surf.id}')" 
-                class="touch-bounce p-2 rounded-xl border text-center transition-all text-xs font-medium ${selectedSurface.id === surf.id ? 'bg-iosBlue/15 border-iosBlue text-white' : 'bg-iosSubCard border-iosBorder text-gray-400'}">
+                class="touch-bounce p-2 rounded-xl border text-center transition-all text-xs font-medium ${selectedSurface.id === surf.id ? 'bg-blue-600/15 border-blue-500' : 'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10'}" style="color: var(--text-main)">
           ${surf.name}
         </button>
       `).join('');
@@ -634,8 +1353,6 @@
           return { ...gel, instanceId: Date.now() + Math.random() };
         });
         updateAppUI();
-        switchTab('stack');
-        showToast(`Applied: ${preset.title}`);
       }
     }
 
@@ -644,6 +1361,10 @@
       renderFixtureOptions();
       document.getElementById('lampSourceLabel').innerText = selectedFixture.name;
       calculateSubtractiveOutput();
+      if (cachedHarmonyResults) {
+        batchCalculateAllHarmonies();
+        renderHarmonyResults(harmonyMode);
+      }
     }
 
     function selectSurface(surfaceId) {
@@ -651,7 +1372,7 @@
       renderSurfaceOptions();
       const surfEl = document.getElementById('surfaceTexture');
       if (surfEl) {
-        surfEl.className = `absolute inset-0 transition-all duration-300 ${selectedSurface.class}`;
+        surfEl.className = `absolute inset-0 transition-colors duration-300 ${selectedSurface.class}`;
       }
     }
 
@@ -797,10 +1518,10 @@
       const container = document.getElementById('stackLayersList');
       if (currentStack.length === 0) {
         container.innerHTML = `
-          <div class="glass-card p-6 rounded-2xl text-center text-gray-500 space-y-2">
-            <svg class="w-8 h-8 mx-auto text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-            <p class="text-xs font-medium">No gel layers in your stack.</p>
-            <p class="text-[11px] text-gray-400">Add sheets from Palette or choose a Preset recipe.</p>
+          <div class="glass-card p-6 rounded-2xl text-center opacity-60 space-y-2">
+            <svg class="w-8 h-8 mx-auto opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <p class="text-xs font-medium" style="color: var(--text-main)">No gel layers in your active stack.</p>
+            <p class="text-[11px]" style="color: var(--text-sub)">Pick a recommended recipe from Harmony Matcher or add sheets from Palette.</p>
           </div>
         `;
         return;
@@ -819,29 +1540,29 @@
         }
 
         return `
-          <div class="glass-card p-3 rounded-xl border border-iosBorder flex items-center justify-between">
+          <div class="glass-card p-3 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-lg border border-white/20 shadow-md flex flex-col items-center justify-center font-mono text-[9px] font-bold ${gel.id === 'white' ? 'text-gray-900' : 'text-white/90'}"
+              <div class="w-10 h-10 rounded-lg border border-black/20 dark:border-white/20 shadow-md flex flex-col items-center justify-center font-mono text-[9px] font-bold ${gel.id === 'white' ? 'text-gray-900' : 'text-white/90'}"
                    style="background-color: ${gel.hex};">
                 <span>${stepLabel}</span>
               </div>
               <div>
-                <div class="text-xs font-bold text-white flex items-center space-x-1.5">
+                <div class="text-xs font-bold flex items-center space-x-1.5" style="color: var(--text-main)">
                   <span>${gel.name}</span>
-                  ${idx === 0 ? '<span class="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-iosOrange/20 text-iosOrange border border-iosOrange/30 uppercase">Lamp Face</span>' : ''}
+                  ${idx === 0 ? '<span class="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-orange-500/20 text-amber-600 dark:text-orange-400 border border-orange-500/30 uppercase">Lamp Face</span>' : ''}
                 </div>
-                <div class="text-[10px] text-gray-400 font-medium">${locationNote}</div>
+                <div class="text-[10px] font-medium opacity-75" style="color: var(--text-sub)">${locationNote}</div>
               </div>
             </div>
             
             <div class="flex items-center space-x-1">
-              <button onclick="moveGelInStack(${idx}, -1)" ${idx === 0 ? 'disabled class="opacity-30 p-1"' : 'class="p-1 text-gray-300 hover:text-white touch-bounce"'}>
+              <button onclick="moveGelInStack(${idx}, -1)" ${idx === 0 ? 'disabled class="opacity-30 p-1"' : 'class="p-1 touch-bounce"'}>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
               </button>
-              <button onclick="moveGelInStack(${idx}, 1)" ${idx === currentStack.length - 1 ? 'disabled class="opacity-30 p-1"' : 'class="p-1 text-gray-300 hover:text-white touch-bounce"'}>
+              <button onclick="moveGelInStack(${idx}, 1)" ${idx === currentStack.length - 1 ? 'disabled class="opacity-30 p-1"' : 'class="p-1 touch-bounce"'}>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </button>
-              <button onclick="removeGelFromStack(${idx})" class="touch-bounce ml-1 px-2.5 py-1 rounded-lg bg-red-950/50 border border-red-800/40 text-red-400 text-xs font-medium">
+              <button onclick="removeGelFromStack(${idx})" class="touch-bounce ml-1 px-2.5 py-1 rounded-lg btn-reset-contrast text-xs font-bold">
                 Remove
               </button>
             </div>
@@ -859,14 +1580,14 @@
        UTILITIES & NAVIGATION
        ========================================================================== */
     function switchTab(tabId) {
-      ['palette', 'presets', 'stack', 'settings'].forEach(t => {
+      ['harmony', 'palette', 'presets', 'stack', 'settings'].forEach(t => {
         const btn = document.getElementById(`tabBtn-${t}`);
         const sec = document.getElementById(`tab-${t}`);
         if (t === tabId) {
-          btn.className = 'flex-1 py-2 rounded-lg font-medium text-center transition-all bg-iosBlue text-white shadow-md flex items-center justify-center space-x-1';
+          btn.className = 'flex-1 py-2 px-2.5 rounded-lg font-bold text-center transition-all tab-btn-active shrink-0 flex items-center justify-center space-x-1';
           sec.classList.remove('hidden');
         } else {
-          btn.className = 'flex-1 py-2 rounded-lg font-medium text-center text-gray-400 transition-all hover:text-white flex items-center justify-center space-x-1';
+          btn.className = 'flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0 flex items-center justify-center space-x-1';
           sec.classList.add('hidden');
         }
       });
@@ -916,6 +1637,58 @@
         navigator.vibrate(10);
       }
     }
+
+    /* ==========================================================================
+       THEME MANAGEMENT & INITIALIZATION
+       ========================================================================== */
+    function setTheme(mode) {
+      const html = document.documentElement;
+      html.setAttribute('data-theme', mode);
+
+      let useDark = false;
+      if (mode === 'dark') {
+        useDark = true;
+      } else if (mode === 'light') {
+        useDark = false;
+      } else {
+        // Evaluate system OS theme preference dynamically
+        useDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      }
+
+      if (useDark) {
+        html.classList.add('dark');
+        html.classList.remove('light');
+      } else {
+        html.classList.remove('dark');
+        html.classList.add('light');
+      }
+    }
+
+    // App Initialization on DOM Load
+    window.addEventListener('DOMContentLoaded', () => {
+      initColorWheelCanvas();
+      renderPalette();
+      renderPresets();
+      renderFixtureOptions();
+      renderSurfaceOptions();
+      updateAppUI();
+
+      // Set initial theme based on selector default
+      const themeSelector = document.getElementById('themeSelector');
+      if (themeSelector) {
+        setTheme(themeSelector.value);
+      }
+
+      // Listen for OS system theme changes dynamically
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+          const currentTheme = document.getElementById('themeSelector')?.value;
+          if (currentTheme === 'system') {
+            setTheme('system');
+          }
+        });
+      }
+    });
   </script>
 </body>
 </html>
