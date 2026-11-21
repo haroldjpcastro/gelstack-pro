@@ -8,6 +8,11 @@
   <meta name="theme-color" content="#0b0c10">
   <title>GelStack Pro - Subtractive Lighting & Harmony Matcher</title>
   
+  <!-- Apple San Francisco Web Fonts (SF Pro Display & SF Mono) for Cross-Platform Fidelity -->
+  <link rel="preconnect" href="https://fonts.cdnfonts.com" crossorigin>
+  <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/sf-mono" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -23,7 +28,8 @@
             iosGreen: '#10b981'
           },
           fontFamily: {
-            sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Segoe UI', 'Roboto', 'sans-serif'],
+            sans: ['"SF Pro Display"', '"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', '"SF Pro"', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'sans-serif'],
+            mono: ['"SF Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           }
         }
       }
@@ -31,15 +37,19 @@
   </script>
 
   <style>
-    /* Dynamic Design System Variables for Dark & Light Themes */
+    /* ==========================================================================
+       DYNAMIC DESIGN SYSTEM VARIABLES (GELSTACK PRO + APPLE SPECULAR EVOLUTION)
+       ========================================================================== */
     :root, html.dark {
-      --bg-main: #0b0c10;
-      --bg-card: rgba(22, 24, 34, 0.88);
-      --bg-subcard: #1b1e2c;
-      --border-color: rgba(255, 255, 255, 0.12);
+      --bg-main: #0a0b10;
+      --bg-card: rgba(22, 24, 34, 0.86);
+      --bg-subcard: rgba(27, 30, 44, 0.72);
+      --border-color: rgba(255, 255, 255, 0.11);
+      --specular-edge: inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+      --card-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.65);
       --text-main: #f3f4f6;
       --text-sub: #9ca3af;
-      --tabstrip-bg: rgba(15, 17, 26, 0.88);
+      --tabstrip-bg: rgba(15, 17, 26, 0.85);
       --input-bg: rgba(255, 255, 255, 0.08);
       --select-opt-bg: #111827;
       --select-opt-fg: #f3f4f6;
@@ -48,16 +58,20 @@
       --btn-reset-border: rgba(220, 38, 38, 0.4);
       --badge-bg: #f97316;
       --badge-fg: #ffffff;
+      --ambient-glow-1: rgba(37, 99, 235, 0.14);
+      --ambient-glow-2: rgba(124, 58, 237, 0.12);
     }
 
     html.light, html:not(.dark) {
       --bg-main: #f4f5f8;
-      --bg-card: rgba(255, 255, 255, 0.95);
+      --bg-card: rgba(255, 255, 255, 0.92);
       --bg-subcard: #eef0f5;
-      --border-color: rgba(0, 0, 0, 0.12);
+      --border-color: rgba(0, 0, 0, 0.09);
+      --specular-edge: inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+      --card-shadow: 0 18px 36px -14px rgba(15, 23, 42, 0.09);
       --text-main: #111827;
       --text-sub: #4b5563;
-      --tabstrip-bg: rgba(255, 255, 255, 0.92);
+      --tabstrip-bg: rgba(255, 255, 255, 0.88);
       --input-bg: rgba(0, 0, 0, 0.06);
       --select-opt-bg: #ffffff;
       --select-opt-fg: #111827;
@@ -66,6 +80,15 @@
       --btn-reset-border: rgba(239, 68, 68, 0.5);
       --badge-bg: #ea580c;
       --badge-fg: #ffffff;
+      --ambient-glow-1: rgba(37, 99, 235, 0.07);
+      --ambient-glow-2: rgba(219, 39, 119, 0.05);
+    }
+
+    body, input, textarea, select, button {
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
 
     body {
@@ -74,22 +97,70 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-      transition: background-color 0.25s ease, color 0.25s ease;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern" 1;
+      letter-spacing: -0.012em;
+      transition: background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease;
     }
 
-    /* Glassmorphism & Shimmer FX */
+    /* Ambient Cinema Backdrop */
+    .ambient-backdrop {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      background:
+        radial-gradient(circle at 18% 12%, var(--ambient-glow-1) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, var(--ambient-glow-2) 0%, transparent 48%);
+    }
+
+    .font-mono, #rgbText, #hexText, #valRed, #valGreen, #valBlue, #yieldValue, #outfitColorDegree, #stackCountBadge, #tabBadgeStack {
+      font-feature-settings: "tnum" 1, "cv02", "cv03";
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.015em;
+    }
+
+    /* Glassmorphism & Specular Card FX */
     .glass-nav {
       background: var(--tabstrip-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
     }
     
     .glass-card {
       background: var(--bg-card);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--border-color);
+      box-shadow: var(--specular-edge), var(--card-shadow);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.35s ease;
+    }
+
+    /* Specular Cursor Spotlight */
+    .specular-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 0%),
+        rgba(255, 255, 255, 0.07),
+        transparent 60%
+      );
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    html.light .specular-card::before {
+      background: radial-gradient(
+        420px circle at var(--mouse-x, 50%) var(--mouse-y, 0%),
+        rgba(37, 99, 235, 0.05),
+        transparent 60%
+      );
+    }
+    .specular-card:hover::before {
+      opacity: 1;
     }
 
     /* Dynamic Contrast Reset Button */
@@ -99,11 +170,22 @@
       border: 1px solid var(--btn-reset-border);
     }
 
-    /* High-contrast Theme Select styling */
+    /* High-contrast Theme Select styling with clean chevron spacing */
     .theme-select {
       background-color: var(--input-bg);
       color: var(--text-main);
       border: 1px solid var(--border-color);
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 2.25rem !important;
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      background-size: 0.75rem 0.75rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f3f4f6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 15l5 5 5-5M7 9l5-5 5 5'/%3E%3C/svg%3E");
+    }
+    html.light .theme-select, html:not(.dark) .theme-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 15l5 5 5-5M7 9l5-5 5 5'/%3E%3C/svg%3E");
     }
     .theme-select option {
       background-color: var(--select-opt-bg);
@@ -207,37 +289,38 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col pb-12 w-full max-w-full overflow-x-hidden">
+  <div class="ambient-backdrop"></div>
 
   <!-- Header Navigation Bar (Mobile Responsive & Tight) -->
-  <header class="sticky top-0 z-40 glass-nav border-b border-black/10 dark:border-white/10 px-3 sm:px-4 py-2.5">
-    <div class="max-w-4xl mx-auto flex items-center justify-between gap-1.5 sm:gap-3 w-full overflow-hidden">
+  <header class="sticky top-0 z-40 glass-nav border-b border-black/10 dark:border-white/10 px-3 sm:px-5 lg:px-8 py-2.5 lg:py-3.5">
+    <div class="max-w-4xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1400px] mx-auto flex items-center justify-between gap-1.5 sm:gap-3 lg:gap-4 w-full">
       
       <!-- Brand Title & Icon -->
-      <div class="flex items-center space-x-2 shrink-0">
-        <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-md shadow-pink-950/20 shrink-0">
-          <svg class="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="flex items-center space-x-2 lg:space-x-2.5 shrink-0">
+        <div class="w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 flex items-center justify-center shadow-md shadow-pink-950/20 border border-white/20 shrink-0">
+          <svg class="w-4 h-4 sm:w-5 sm:h-5 lg:w-5 lg:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
           </svg>
         </div>
         <div class="leading-tight">
           <div class="flex items-center space-x-1.5">
-            <h1 class="text-xs sm:text-base font-bold tracking-tight whitespace-nowrap" style="color: var(--text-main)">GelStack Pro</h1>
-            <span class="hidden sm:inline-block text-[9px] uppercase font-semibold px-1.5 py-0.5 rounded bg-blue-600/20 text-blue-500 dark:text-blue-400 border border-blue-500/30">12-PACK</span>
+            <h1 class="text-xs sm:text-base lg:text-lg font-bold tracking-tight whitespace-nowrap" style="color: var(--text-main)">GelStack Pro</h1>
+            <span class="hidden sm:inline-block text-[9px] lg:text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-blue-600/20 text-blue-500 dark:text-blue-400 border border-blue-500/30 tracking-wider">12-PACK</span>
           </div>
-          <p class="hidden sm:block text-[10px] opacity-75 whitespace-nowrap" style="color: var(--text-sub)">Subtractive Engine & Harmony Matcher</p>
+          <p class="hidden sm:block text-[10px] lg:text-xs opacity-75 whitespace-nowrap tracking-[-0.01em]" style="color: var(--text-sub)">Subtractive Engine & Harmony Matcher</p>
         </div>
       </div>
 
       <!-- Theme Switcher & Actions -->
-      <div class="flex items-center space-x-1.5 shrink-0">
+      <div class="flex items-center space-x-1.5 lg:space-x-2 shrink-0">
         <!-- Compact Theme Selector Dropdown -->
-        <select id="themeSelector" onchange="setTheme(this.value)" class="theme-select px-2 py-1 rounded-lg text-[11px] font-semibold focus:outline-none cursor-pointer max-w-[105px] sm:max-w-none truncate">
+        <select id="themeSelector" onchange="setTheme(this.value)" aria-label="Theme Mode" class="theme-select pl-2.5 pr-8 py-1 lg:py-1.5 lg:pl-3.5 lg:pr-10 rounded-lg lg:rounded-xl text-[11px] lg:text-xs font-semibold focus:outline-none cursor-pointer whitespace-nowrap">
           <option value="system">💻 System</option>
           <option value="dark">🌙 Dark</option>
           <option value="light">☀️ Light</option>
         </select>
 
-        <button onclick="togglePwaModal()" class="touch-bounce p-1.5 sm:px-2.5 sm:py-1 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[11px] flex items-center space-x-1" style="color: var(--text-main)">
+        <button onclick="togglePwaModal()" class="touch-bounce p-1.5 sm:px-2.5 sm:py-1 lg:px-3 lg:py-1.5 rounded-lg lg:rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[11px] lg:text-xs flex items-center space-x-1 shrink-0" style="color: var(--text-main)">
           <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
           </svg>
@@ -245,7 +328,7 @@
         </button>
         
         <!-- High Contrast Compact Reset Button -->
-        <button onclick="clearAllGels()" class="touch-bounce px-2.5 py-1 rounded-lg btn-reset-contrast text-[11px] font-bold shadow-sm whitespace-nowrap">
+        <button onclick="clearAllGels()" class="touch-bounce px-2.5 py-1 lg:px-3.5 lg:py-1.5 rounded-lg lg:rounded-xl btn-reset-contrast text-[11px] lg:text-xs font-bold shadow-sm whitespace-nowrap shrink-0">
           Reset
         </button>
       </div>
@@ -254,84 +337,84 @@
   </header>
 
   <!-- Main Responsive Grid -->
-  <main class="flex-1 max-w-4xl mx-auto w-full px-3 sm:px-4 pt-3 sm:pt-4 space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-6">
+  <main class="flex-1 max-w-4xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1400px] mx-auto w-full px-3 sm:px-5 lg:px-8 pt-3.5 sm:pt-5 lg:pt-8 pb-8 space-y-4 md:space-y-0 md:grid md:grid-cols-12 md:gap-6 lg:gap-8">
 
     <!-- LEFT COLUMN: SPOTLIGHT PREVIEW & SPECTRAL METERS -->
-    <div class="md:col-span-5 space-y-4">
+    <div class="md:col-span-5 lg:col-span-5 xl:col-span-5 space-y-4 lg:space-y-5">
       
       <!-- Spotlight Stage Card -->
-      <section class="glass-card rounded-2xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden">
+      <section class="glass-card specular-card rounded-2xl lg:rounded-3xl p-3.5 sm:p-4 lg:p-5 relative overflow-hidden space-y-3 lg:space-y-4">
         
         <!-- Header Fixture Info -->
-        <div class="flex items-center justify-between mb-3 text-xs" style="color: var(--text-sub)">
+        <div class="flex items-center justify-between text-xs lg:text-sm" style="color: var(--text-sub)">
           <div class="flex items-center space-x-1.5 truncate pr-2">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
             <span id="lampSourceLabel" class="font-medium truncate" style="color: var(--text-main)">5600K Daylight LED</span>
           </div>
-          <button onclick="switchTab('settings')" class="text-blue-500 hover:underline flex items-center space-x-1 text-[11px] font-semibold shrink-0">
+          <button onclick="switchTab('settings')" class="text-blue-500 hover:underline flex items-center space-x-1 text-[11px] lg:text-xs font-semibold shrink-0">
             <span>Stage</span>
             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
 
         <!-- Spotlight Viewport -->
-        <div id="spotlightContainer" class="relative w-full h-52 sm:h-56 rounded-xl overflow-hidden border border-black/10 dark:border-white/10 flex items-center justify-center transition-all duration-300">
+        <div id="spotlightContainer" class="relative w-full h-52 sm:h-56 md:h-64 lg:h-72 xl:h-80 rounded-xl lg:rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 flex items-center justify-center transition-all duration-300">
           <div id="surfaceTexture" class="absolute inset-0 bg-texture-stage transition-colors duration-300"></div>
 
           <!-- Diffuse Glow Overlay -->
           <div id="diffusionOverlay" class="absolute inset-0 bg-white/20 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-none"></div>
 
           <!-- Spotlight Radial Glow -->
-          <div id="spotlightGlow" class="absolute w-44 h-44 sm:w-48 sm:h-48 rounded-full filter blur-xl transition-all duration-300 opacity-90" style="background-color: #ffffff;"></div>
+          <div id="spotlightGlow" class="absolute w-44 h-44 sm:w-48 sm:h-48 lg:w-56 lg:h-56 rounded-full filter blur-xl transition-all duration-300 opacity-90" style="background-color: #ffffff;"></div>
 
           <!-- Spotlight Core & Dynamic Synchronized Callout Badge -->
-          <div id="spotlightCore" class="relative z-10 w-32 h-32 sm:w-36 sm:h-36 rounded-full border-2 border-white/20 shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-center p-2" style="background-color: #ffffff;">
-            <span id="spotlightToneBadge" class="text-[11px] font-bold px-3 py-1 rounded-full bg-black/85 text-white backdrop-blur-md shadow-md border border-white/20 max-w-[125px] sm:max-w-[150px] leading-tight text-center break-words">
+          <div id="spotlightCore" class="relative z-10 w-32 h-32 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-full border-2 border-white/20 shadow-2xl transition-all duration-300 flex flex-col items-center justify-center text-center p-2" style="background-color: #ffffff;">
+            <span id="spotlightToneBadge" class="text-[11px] lg:text-xs font-bold px-3 py-1 rounded-full bg-black/85 text-white backdrop-blur-md shadow-md border border-white/20 max-w-[125px] sm:max-w-[160px] leading-tight text-center break-words">
               White Light
             </span>
           </div>
 
           <!-- Layer Count Badge -->
-          <div class="absolute bottom-2 left-2 z-20 flex items-center space-x-1 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md text-[10px] text-gray-200 border border-white/10">
+          <div class="absolute bottom-2 left-2 z-20 flex items-center space-x-1 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md text-[10px] lg:text-xs text-gray-200 border border-white/10">
             <svg class="w-3.5 h-3.5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
             <span id="stackCountBadge">0 Gels Stacked</span>
           </div>
 
           <!-- Light Yield Readout -->
-          <div class="absolute bottom-2 right-2 z-20 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md text-[10px] font-mono text-emerald-400 border border-white/10">
+          <div class="absolute bottom-2 right-2 z-20 px-2.5 py-1 rounded-full bg-black/80 backdrop-blur-md text-[10px] lg:text-xs font-mono text-emerald-400 border border-white/10">
             Yield: <span id="yieldValue">100%</span>
           </div>
         </div>
 
         <!-- Color Readouts & Spectral Meters -->
-        <div class="mt-3 pt-3 border-t border-black/10 dark:border-white/10 space-y-2">
-          <div class="flex items-center justify-between text-xs font-mono">
-            <span class="opacity-80 text-[11px] sm:text-xs">RGB: <strong id="rgbText" class="text-orange-500 font-bold">255, 255, 255</strong></span>
-            <span class="opacity-80 text-[11px] sm:text-xs">HEX: <strong id="hexText" class="text-blue-500 font-bold">#FFFFFF</strong></span>
-            <button onclick="copyRecipeToClipboard()" class="touch-bounce px-2 py-0.5 rounded bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[10px] active:bg-blue-600 active:text-white font-semibold">
+        <div class="pt-2 border-t border-black/10 dark:border-white/10 space-y-2">
+          <div class="flex items-center justify-between text-xs lg:text-sm font-mono">
+            <span class="opacity-80 text-[11px] sm:text-xs lg:text-sm">RGB: <strong id="rgbText" class="text-orange-500 font-bold">255, 255, 255</strong></span>
+            <span class="opacity-80 text-[11px] sm:text-xs lg:text-sm">HEX: <strong id="hexText" class="text-blue-500 font-bold">#FFFFFF</strong></span>
+            <button onclick="copyRecipeToClipboard()" class="touch-bounce px-2.5 py-1 rounded-lg bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-[10px] lg:text-xs active:bg-blue-600 active:text-white font-semibold">
               Copy
             </button>
           </div>
 
           <!-- Spectral Wavelength Pass Bars -->
           <div class="space-y-1.5 pt-1">
-            <div class="flex items-center text-[10px] opacity-80">
-              <span class="w-16 text-red-500 font-semibold">Red Pass</span>
-              <div class="flex-1 h-1.5 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
+            <div class="flex items-center text-[10px] lg:text-xs opacity-80">
+              <span class="w-16 lg:w-20 text-red-500 font-semibold">Red Pass</span>
+              <div class="flex-1 h-1.5 lg:h-2 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
                 <div id="barRed" class="h-full bg-red-500 transition-all duration-300" style="width: 100%;"></div>
               </div>
               <span id="valRed" class="w-8 text-right font-mono">100%</span>
             </div>
-            <div class="flex items-center text-[10px] opacity-80">
-              <span class="w-16 text-green-500 font-semibold">Green Pass</span>
-              <div class="flex-1 h-1.5 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
+            <div class="flex items-center text-[10px] lg:text-xs opacity-80">
+              <span class="w-16 lg:w-20 text-green-500 font-semibold">Green Pass</span>
+              <div class="flex-1 h-1.5 lg:h-2 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
                 <div id="barGreen" class="h-full bg-green-500 transition-all duration-300" style="width: 100%;"></div>
               </div>
               <span id="valGreen" class="w-8 text-right font-mono">100%</span>
             </div>
-            <div class="flex items-center text-[10px] opacity-80">
-              <span class="w-16 text-blue-500 font-semibold">Blue Pass</span>
-              <div class="flex-1 h-1.5 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
+            <div class="flex items-center text-[10px] lg:text-xs opacity-80">
+              <span class="w-16 lg:w-20 text-blue-500 font-semibold">Blue Pass</span>
+              <div class="flex-1 h-1.5 lg:h-2 bg-black/20 dark:bg-black/40 rounded-full overflow-hidden mx-2">
                 <div id="barBlue" class="h-full bg-blue-500 transition-all duration-300" style="width: 100%;"></div>
               </div>
               <span id="valBlue" class="w-8 text-right font-mono">100%</span>
@@ -343,24 +426,24 @@
     </div>
 
     <!-- RIGHT COLUMN: HARMONY MATCHER, PALETTE, PRESETS, ACTIVE STACK & STAGE -->
-    <div class="md:col-span-7 space-y-4">
+    <div class="md:col-span-7 lg:col-span-7 xl:col-span-7 space-y-4 lg:space-y-5">
       
       <!-- Glassy Shimmer Navigation Tabs -->
-      <nav class="flex rounded-xl glass-card p-1 border border-black/10 dark:border-white/10 space-x-1 text-xs shimmer-tabstrip overflow-x-auto no-scrollbar">
-        <button onclick="switchTab('harmony')" id="tabBtn-harmony" class="flex-1 py-2 px-2.5 rounded-lg font-bold text-center transition-all tab-btn-active shrink-0 flex items-center justify-center space-x-1">
+      <nav class="flex rounded-xl lg:rounded-2xl glass-card p-1 border border-black/10 dark:border-white/10 space-x-1 text-xs lg:text-sm shimmer-tabstrip overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('harmony')" id="tabBtn-harmony" class="flex-1 py-2 px-2.5 lg:py-2.5 lg:px-3.5 rounded-lg lg:rounded-xl font-bold text-center transition-all tab-btn-active shrink-0 flex items-center justify-center space-x-1">
           <span>🎨 Harmony Matcher</span>
         </button>
-        <button onclick="switchTab('palette')" id="tabBtn-palette" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0">
+        <button onclick="switchTab('palette')" id="tabBtn-palette" class="flex-1 py-2 px-2.5 lg:py-2.5 lg:px-3.5 rounded-lg lg:rounded-xl font-medium text-center transition-all tab-btn-inactive shrink-0">
           12-Pack Palette
         </button>
-        <button onclick="switchTab('presets')" id="tabBtn-presets" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0">
+        <button onclick="switchTab('presets')" id="tabBtn-presets" class="flex-1 py-2 px-2.5 lg:py-2.5 lg:px-3.5 rounded-lg lg:rounded-xl font-medium text-center transition-all tab-btn-inactive shrink-0">
           Presets
         </button>
-        <button onclick="switchTab('stack')" id="tabBtn-stack" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0 flex items-center justify-center space-x-1">
+        <button onclick="switchTab('stack')" id="tabBtn-stack" class="flex-1 py-2 px-2.5 lg:py-2.5 lg:px-3.5 rounded-lg lg:rounded-xl font-medium text-center transition-all tab-btn-inactive shrink-0 flex items-center justify-center space-x-1">
           <span>Active Stack</span>
           <span id="tabBadgeStack" class="px-1.5 py-0.2 rounded-full text-[10px] font-bold font-mono shadow-sm" style="background-color: var(--badge-bg); color: var(--badge-fg);">0</span>
         </button>
-        <button onclick="switchTab('settings')" id="tabBtn-settings" class="flex-1 py-2 px-2.5 rounded-lg font-medium text-center transition-all tab-btn-inactive shrink-0">
+        <button onclick="switchTab('settings')" id="tabBtn-settings" class="flex-1 py-2 px-2.5 lg:py-2.5 lg:px-3.5 rounded-lg lg:rounded-xl font-medium text-center transition-all tab-btn-inactive shrink-0">
           Fixture & Stage
         </button>
       </nav>
@@ -368,18 +451,18 @@
       <!-- TAB 1: 🎨 HARMONY MATCHER (DEFAULT OPENING TAB) -->
       <section id="tab-harmony" class="space-y-4">
         
-        <div class="glass-card p-4 rounded-2xl space-y-4 border border-black/10 dark:border-white/10">
+        <div class="glass-card specular-card p-4 lg:p-6 rounded-2xl lg:rounded-3xl space-y-4 border border-black/10 dark:border-white/10">
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-xs font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400">Outfit & Wardrobe Color Picker</h2>
-              <p class="text-[11px]" style="color: var(--text-sub)">Touch or drag the color wheel & tweak sliders to pick your subject's outfit tone.</p>
+              <h2 class="text-xs lg:text-sm font-bold uppercase tracking-wider text-blue-500 dark:text-blue-400">Outfit & Wardrobe Color Picker</h2>
+              <p class="text-[11px] lg:text-xs" style="color: var(--text-sub)">Touch or drag the color wheel & tweak sliders to pick your subject's outfit tone.</p>
             </div>
             <!-- Current Outfit Color Swatch -->
-            <div class="flex items-center space-x-2">
-              <div id="outfitSwatch" class="w-9 h-9 rounded-full border-2 border-white/50 shadow-md" style="background-color: #00E5FF;"></div>
+            <div class="flex items-center space-x-2 lg:space-x-2.5">
+              <div id="outfitSwatch" class="w-9 h-9 lg:w-10 lg:h-10 rounded-full border-2 border-white/50 shadow-md" style="background-color: #00E5FF;"></div>
               <div class="text-right">
-                <div id="outfitColorName" class="text-xs font-bold" style="color: var(--text-main)">Cobalt Blue</div>
-                <div id="outfitColorDegree" class="text-[10px] font-mono text-orange-500 font-bold">190° | 100% S | 50% L</div>
+                <div id="outfitColorName" class="text-xs lg:text-sm font-bold" style="color: var(--text-main)">Cobalt Blue</div>
+                <div id="outfitColorDegree" class="text-[10px] lg:text-xs font-mono text-orange-500 font-bold">190° | 100% S | 50% L</div>
               </div>
             </div>
           </div>
@@ -388,49 +471,49 @@
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center py-1">
             <!-- 360° Color Wheel -->
             <div class="sm:col-span-6 flex justify-center">
-              <div class="relative w-48 h-48 rounded-full shadow-2xl p-1 bg-black/20 dark:bg-black/40 border border-black/10 dark:border-white/10">
-                <canvas id="colorWheelCanvas" width="184" height="184" class="cursor-pointer rounded-full touch-none"></canvas>
+              <div class="relative w-48 h-48 lg:w-56 lg:h-56 rounded-full shadow-2xl p-1 bg-black/20 dark:bg-black/40 border border-black/10 dark:border-white/10">
+                <canvas id="colorWheelCanvas" width="220" height="220" class="w-full h-full cursor-pointer rounded-full touch-none"></canvas>
               </div>
             </div>
 
             <!-- Saturation & Lightness Sliders -->
-            <div class="sm:col-span-6 space-y-3 bg-black/5 dark:bg-white/5 p-3 rounded-xl border border-black/10 dark:border-white/10">
+            <div class="sm:col-span-6 space-y-3 bg-black/5 dark:bg-white/5 p-3 lg:p-4 rounded-xl lg:rounded-2xl border border-black/10 dark:border-white/10">
               <div class="space-y-1">
-                <div class="flex justify-between text-xs">
+                <div class="flex justify-between text-xs lg:text-sm">
                   <span class="font-semibold" style="color: var(--text-sub)">Saturation</span>
                   <span id="satValueText" class="font-mono font-bold text-blue-500">100%</span>
                 </div>
-                <input type="range" id="satSlider" min="0" max="100" value="100" oninput="onSatLightChange()" class="w-full accent-blue-600 h-1.5 bg-black/20 rounded-lg cursor-pointer">
+                <input type="range" id="satSlider" min="0" max="100" value="100" oninput="onSatLightChange()" class="w-full accent-blue-600 h-1.5 lg:h-2 bg-black/20 rounded-lg cursor-pointer">
               </div>
 
               <div class="space-y-1">
-                <div class="flex justify-between text-xs">
+                <div class="flex justify-between text-xs lg:text-sm">
                   <span class="font-semibold" style="color: var(--text-sub)">Lightness / Luminosity</span>
                   <span id="lightValueText" class="font-mono font-bold text-pink-500">50%</span>
                 </div>
-                <input type="range" id="lightSlider" min="10" max="90" value="50" oninput="onSatLightChange()" class="w-full accent-pink-600 h-1.5 bg-black/20 rounded-lg cursor-pointer">
+                <input type="range" id="lightSlider" min="10" max="90" value="50" oninput="onSatLightChange()" class="w-full accent-pink-600 h-1.5 lg:h-2 bg-black/20 rounded-lg cursor-pointer">
               </div>
             </div>
           </div>
 
           <!-- Harmony Selector Pills -->
           <div class="space-y-1.5 pt-1">
-            <label class="text-[11px] font-semibold uppercase tracking-wider" style="color: var(--text-sub)">Select Color Harmony Rule</label>
-            <div class="grid grid-cols-3 gap-2">
-              <button onclick="setHarmonyMode('complementary')" id="harmBtn-complementary" class="py-2 rounded-xl text-xs font-bold border transition-all bg-gradient-to-r from-blue-600 to-violet-600 text-white border-blue-500 shadow-sm">
+            <label class="text-[11px] lg:text-xs font-semibold uppercase tracking-wider" style="color: var(--text-sub)">Select Color Harmony Rule</label>
+            <div class="grid grid-cols-3 gap-2 lg:gap-3">
+              <button onclick="setHarmonyMode('complementary')" id="harmBtn-complementary" class="py-2 lg:py-2.5 rounded-xl text-xs lg:text-sm font-bold border transition-all bg-gradient-to-r from-blue-600 to-violet-600 text-white border-blue-500 shadow-sm">
                 Pop (Complementary)
               </button>
-              <button onclick="setHarmonyMode('analogous')" id="harmBtn-analogous" class="py-2 rounded-xl text-xs font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10" style="color: var(--text-sub)">
+              <button onclick="setHarmonyMode('analogous')" id="harmBtn-analogous" class="py-2 lg:py-2.5 rounded-xl text-xs lg:text-sm font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10" style="color: var(--text-sub)">
                 Mood (Analogous)
               </button>
-              <button onclick="setHarmonyMode('triadic')" id="harmBtn-triadic" class="py-2 rounded-xl text-xs font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10" style="color: var(--text-sub)">
+              <button onclick="setHarmonyMode('triadic')" id="harmBtn-triadic" class="py-2 lg:py-2.5 rounded-xl text-xs lg:text-sm font-medium border transition-all bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10" style="color: var(--text-sub)">
                 Vibrant (Triadic)
               </button>
             </div>
           </div>
 
           <!-- Hero Action Button with Light Sweep Shimmer Effect -->
-          <button id="btnDiscoverHarmonies" onclick="triggerDiscoverHarmonies()" class="touch-bounce btn-discover-shimmer w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 font-bold text-white text-xs shadow-lg shadow-pink-950/20 flex items-center justify-center space-x-2">
+          <button id="btnDiscoverHarmonies" onclick="triggerDiscoverHarmonies()" class="touch-bounce btn-discover-shimmer w-full py-3 lg:py-3.5 rounded-xl lg:rounded-2xl bg-gradient-to-r from-blue-600 via-violet-600 to-pink-600 font-bold text-white text-xs lg:text-sm shadow-lg shadow-pink-950/20 flex items-center justify-center space-x-2">
             <span>✨</span>
             <span>Discover Gel Harmonies</span>
             <span>✨</span>
@@ -454,11 +537,11 @@
       <!-- TAB 2: 12-PACK PALETTE -->
       <section id="tab-palette" class="hidden space-y-3">
         <div class="flex items-center justify-between px-1">
-          <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Official 12-Piece Gel Sheet Set</h2>
-          <span class="text-[11px]" style="color: var(--text-sub)">Tap gel sheet to add</span>
+          <h2 class="text-xs lg:text-sm font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Official 12-Piece Gel Sheet Set</h2>
+          <span class="text-[11px] lg:text-xs" style="color: var(--text-sub)">Tap gel sheet to add</span>
         </div>
 
-        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2.5" id="gelPaletteGrid">
+        <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-2.5 lg:gap-3" id="gelPaletteGrid">
           <!-- Rendered dynamically -->
         </div>
       </section>
@@ -466,16 +549,16 @@
       <!-- TAB 3: AUDITED PRESETS -->
       <section id="tab-presets" class="hidden space-y-3">
         <!-- Category Filter Pills -->
-        <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar pb-1 text-xs">
-          <button onclick="filterPresets('all')" id="catBtn-all" class="px-3 py-1.5 rounded-full font-medium bg-blue-600 text-white shrink-0">All Recipes</button>
-          <button onclick="filterPresets('brown')" id="catBtn-brown" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Earth & Browns</button>
-          <button onclick="filterPresets('warm')" id="catBtn-warm" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Warm & Sunset</button>
-          <button onclick="filterPresets('cyberpunk')" id="catBtn-cyberpunk" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Cyberpunk & Neon</button>
-          <button onclick="filterPresets('cinematic')" id="catBtn-cinematic" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Cinematic & Film</button>
-          <button onclick="filterPresets('pastels')" id="catBtn-pastels" class="px-3 py-1.5 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Soft Pastels</button>
+        <div class="flex items-center space-x-1.5 overflow-x-auto no-scrollbar pb-1 text-xs lg:text-sm">
+          <button onclick="filterPresets('all')" id="catBtn-all" class="px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-full font-medium bg-blue-600 text-white shrink-0">All Recipes</button>
+          <button onclick="filterPresets('brown')" id="catBtn-brown" class="px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Earth & Browns</button>
+          <button onclick="filterPresets('warm')" id="catBtn-warm" class="px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Warm & Sunset</button>
+          <button onclick="filterPresets('cyberpunk')" id="catBtn-cyberpunk" class="px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Cyberpunk & Neon</button>
+          <button onclick="filterPresets('cinematic')" id="catBtn-cinematic" class="px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Cinematic & Film</button>
+          <button onclick="filterPresets('pastels')" id="catBtn-pastels" class="px-3 py-1.5 lg:px-3.5 lg:py-2 rounded-full font-medium bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shrink-0" style="color: var(--text-sub)">Soft Pastels</button>
         </div>
 
-        <div class="space-y-2.5 max-h-[420px] overflow-y-auto no-scrollbar pr-1" id="presetRecipesContainer">
+        <div class="space-y-2.5 max-h-[420px] lg:max-h-[520px] overflow-y-auto no-scrollbar pr-1" id="presetRecipesContainer">
           <!-- Rendered dynamically -->
         </div>
       </section>
@@ -484,29 +567,29 @@
       <section id="tab-stack" class="hidden space-y-3">
         <div class="flex items-center justify-between px-1">
           <div>
-            <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Physical Rig Installation</h2>
-            <p class="text-[10px]" style="color: var(--text-sub)">Step 1 goes on the lamp lens first, followed by outer layers.</p>
+            <h2 class="text-xs lg:text-sm font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Physical Rig Installation</h2>
+            <p class="text-[10px] lg:text-xs" style="color: var(--text-sub)">Step 1 goes on the lamp lens first, followed by outer layers.</p>
           </div>
-          <button onclick="clearAllGels()" class="text-[11px] text-red-500 font-semibold hover:underline">Clear All</button>
+          <button onclick="clearAllGels()" class="text-[11px] lg:text-xs text-red-500 font-semibold hover:underline">Clear All</button>
         </div>
 
-        <div id="stackLayersList" class="space-y-2">
+        <div id="stackLayersList" class="space-y-2 lg:space-y-2.5">
           <!-- Rendered dynamically -->
         </div>
       </section>
 
       <!-- TAB 5: FIXTURE & STAGE SETTINGS -->
       <section id="tab-settings" class="hidden space-y-4">
-        <div class="glass-card rounded-2xl p-4 space-y-3">
-          <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Base Light Source (Color Temperature)</h2>
+        <div class="glass-card specular-card rounded-2xl lg:rounded-3xl p-4 lg:p-5 space-y-3">
+          <h2 class="text-xs lg:text-sm font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Base Light Source (Color Temperature)</h2>
           <div class="space-y-2" id="lampOptions">
             <!-- Rendered dynamically -->
           </div>
         </div>
 
-        <div class="glass-card rounded-2xl p-4 space-y-3">
-          <h2 class="text-xs font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Background Wall Surface</h2>
-          <div class="grid grid-cols-3 gap-2" id="surfaceOptions">
+        <div class="glass-card specular-card rounded-2xl lg:rounded-3xl p-4 lg:p-5 space-y-3">
+          <h2 class="text-xs lg:text-sm font-semibold uppercase tracking-wider opacity-80" style="color: var(--text-main)">Background Wall Surface</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 lg:gap-3" id="surfaceOptions">
             <!-- Rendered dynamically -->
           </div>
         </div>
@@ -886,6 +969,17 @@
     }
 
     /* ==========================================================================
+       APPLE-STYLE SPECULAR CURSOR SPOTLIGHT TRACKING
+       ========================================================================== */
+    document.addEventListener('pointermove', (e) => {
+      document.querySelectorAll('.specular-card').forEach(card => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
+
+    /* ==========================================================================
        REFINED COLOR WHEEL CANVAS & HARMONY MATCHER LOGIC WITH SLIDERS
        ========================================================================== */
     function initColorWheelCanvas() {
@@ -895,12 +989,10 @@
       drawColorWheel();
 
       let isDragging = false;
-      const handleInput = (e) => {
+      const handleInput = (clientX, clientY) => {
         const rect = canvas.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-        const x = clientX - rect.left - canvas.width / 2;
-        const y = clientY - rect.top - canvas.height / 2;
+        const x = clientX - rect.left - rect.width / 2;
+        const y = clientY - rect.top - rect.height / 2;
         
         let angle = Math.atan2(y, x) * (180 / Math.PI);
         if (angle < 0) angle += 360;
@@ -910,13 +1002,27 @@
         drawColorWheel();
       };
 
-      canvas.addEventListener('mousedown', (e) => { isDragging = true; handleInput(e); });
-      window.addEventListener('mousemove', (e) => { if (isDragging) handleInput(e); });
-      window.addEventListener('mouseup', () => { isDragging = false; });
+      canvas.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+        handleInput(e.clientX, e.clientY);
+        e.preventDefault();
+      });
 
-      canvas.addEventListener('touchstart', (e) => { isDragging = true; handleInput(e); });
-      window.addEventListener('touchmove', (e) => { if (isDragging) handleInput(e); });
-      window.addEventListener('touchend', () => { isDragging = false; });
+      canvas.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        handleInput(e.clientX, e.clientY);
+      });
+
+      const endDrag = (e) => {
+        if (isDragging) {
+          isDragging = false;
+          try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+      };
+
+      canvas.addEventListener('pointerup', endDrag);
+      canvas.addEventListener('pointercancel', endDrag);
       
       updateOutfitSwatchDisplay();
     }
@@ -1217,13 +1323,13 @@
       const grid = document.getElementById('gelPaletteGrid');
       grid.innerHTML = GELS.map(gel => `
         <button onclick="addGelToStack('${gel.id}')" 
-                class="touch-bounce glass-card p-2.5 rounded-xl flex flex-col items-center justify-between border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all text-center group">
-          <div class="w-11 h-11 rounded-lg shadow-inner mb-2 relative overflow-hidden flex items-center justify-center border border-black/20 dark:border-white/20"
+                class="touch-bounce glass-card specular-card p-2.5 lg:p-3 rounded-xl lg:rounded-2xl flex flex-col items-center justify-between border border-black/10 dark:border-white/10 hover:border-blue-500 transition-all text-center group">
+          <div class="w-11 h-11 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl shadow-inner mb-2 relative overflow-hidden flex items-center justify-center border border-black/20 dark:border-white/20"
                style="background-color: ${gel.hex};">
-            <span class="text-[8px] font-bold ${gel.id === 'white' ? 'text-gray-900' : 'text-white/90'} drop-shadow uppercase tracking-wider">${gel.tag}</span>
+            <span class="text-[8px] lg:text-[9px] font-bold ${gel.id === 'white' ? 'text-gray-900' : 'text-white/90'} drop-shadow uppercase tracking-wider">${gel.tag}</span>
           </div>
-          <span class="text-[11px] font-semibold group-hover:text-blue-500 truncate w-full" style="color: var(--text-main)">${gel.name}</span>
-          <span class="text-[10px] mt-0.5 opacity-70" style="color: var(--text-sub)">+ Add Sheet</span>
+          <span class="text-[11px] lg:text-xs font-semibold group-hover:text-blue-500 truncate w-full" style="color: var(--text-main)">${gel.name}</span>
+          <span class="text-[10px] lg:text-[11px] mt-0.5 opacity-70" style="color: var(--text-sub)">+ Add Sheet</span>
         </button>
       `).join('');
     }
@@ -1237,17 +1343,17 @@
       container.innerHTML = filtered.map((preset) => {
         const gelNames = preset.gels.map(gid => GELS.find(g => g.id === gid)?.name).join(' + ');
         return `
-          <div class="glass-card p-3 rounded-xl border border-black/10 dark:border-white/10 flex items-center justify-between">
+          <div class="glass-card specular-card p-3 lg:p-3.5 rounded-xl lg:rounded-2xl border border-black/10 dark:border-white/10 flex items-center justify-between">
             <div class="space-y-1 pr-2">
               <div class="flex items-center space-x-2">
-                <h3 class="text-xs font-bold" style="color: var(--text-main)">${preset.title}</h3>
-                <span class="text-[9px] font-semibold px-1.5 py-0.2 rounded bg-black/10 dark:bg-black/30 text-blue-500 dark:text-blue-400 border border-blue-500/20 uppercase">${preset.category}</span>
+                <h3 class="text-xs lg:text-sm font-bold" style="color: var(--text-main)">${preset.title}</h3>
+                <span class="text-[9px] lg:text-[10px] font-semibold px-1.5 py-0.2 rounded bg-black/10 dark:bg-black/30 text-blue-500 dark:text-blue-400 border border-blue-500/20 uppercase tracking-wider">${preset.category}</span>
               </div>
-              <p class="text-[11px] text-amber-600 dark:text-iosOrange font-semibold">${gelNames}</p>
-              <p class="text-[10px] leading-tight opacity-75" style="color: var(--text-sub)">${preset.desc}</p>
+              <p class="text-[11px] lg:text-xs text-amber-600 dark:text-iosOrange font-semibold">${gelNames}</p>
+              <p class="text-[10px] lg:text-[11px] leading-tight opacity-75" style="color: var(--text-sub)">${preset.desc}</p>
             </div>
             <button onclick="applyPreset('${preset.id}')" 
-                    class="touch-bounce shrink-0 px-3 py-2 rounded-xl bg-blue-600 text-white font-medium text-xs shadow-md">
+                    class="touch-bounce shrink-0 px-3 py-2 lg:px-4 lg:py-2.5 rounded-xl bg-blue-600 text-white font-medium text-xs lg:text-sm shadow-md">
               Apply
             </button>
           </div>
